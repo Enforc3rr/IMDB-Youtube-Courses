@@ -13,6 +13,8 @@
   "dependencies": {
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
+    "googleapis": "^92.0.0",
+    "moment": "^2.29.1",
     "mongoose": "^6.1.7"
   },
   "devDependencies": {
