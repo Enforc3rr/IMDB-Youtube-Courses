@@ -46,6 +46,17 @@ const schema = new mongoose.Schema({
      type : Number ,
      default : 0
     },
+    ratingsReceived : {
+      type : Array ,
+      ratingReceivedBy : {
+          type : String ,
+          required : true
+      },
+      ratingValue : {
+          type : Number ,
+          required : true
+      }
+    },
     videoAddedToWebApp : String
 });
 module.exports = mongoose.model("videoDetails",schema);
