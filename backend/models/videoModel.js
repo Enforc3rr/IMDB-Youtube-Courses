@@ -1,4 +1,14 @@
 const mongoose = require("mongoose");
+/*
+{
+    "videoURL",
+    "videoCategory",
+    "videoTopic",
+    "videoDescription",
+    "videoLanguage",
+    "videoRating":5
+}
+ */
 
 const schema = new mongoose.Schema({
     videoID : {
@@ -15,6 +25,7 @@ const schema = new mongoose.Schema({
         type : String ,
         required : true
     } ,
+    videoUploadedAt : Date,
     videoThumbnailURL : String ,
     videoCategory : {
         type : String ,

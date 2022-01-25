@@ -1,5 +1,6 @@
 const videoDatabase = require("../models/videoModel");
 const moment = require("moment");
+const axios = require("axios");
 const videoAdditionDate = `${moment().format("DD/MM/YYYY").split("/")[0]}-${moment().format("DD/MM/YYYY").split("/")[1]}-${moment().format("DD/MM/YYYY").split("/")[2]}`;
 
 exports.addVideo = async (req,res)=>{
@@ -7,11 +8,14 @@ exports.addVideo = async (req,res)=>{
     if(req.body.videoURL.split("watch?v=")[1]){ // put this code on front end as well so that we don't get any other link.
        videoID = req.body.videoURL.split("watch?v=")[1].split("&")[0];
     }
+    const youtubeAPIResponse = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoID}&key=${process.env.YOUTUBE_KEY}`);
+
     const video = {
         videoID ,
         videoURL : `https://www.youtube.com/watch?v=${videoID}` ,
-        videoTitle : req.body.videoTitle ,
-        videoUploadedBy : req.body.videoUploadedBy ,
+        videoTitle : youtubeAPIResponse.data.items[0].snippet.title,
+        videoUploadedBy : youtubeAPIResponse.data.items[0].snippet.channelTitle ,
+        videoUploadedAt : youtubeAPIResponse.data.items[0].snippet.publishedAt,
         videoThumbnailURL : `https://img.youtube.com/vi/${videoID}/0.jpg`,
         videoCategory : req.body.videoCategory.toLowerCase() ,
         videoTopic : req.body.videoTopic.toLowerCase() ,
