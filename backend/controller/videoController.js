@@ -22,8 +22,7 @@ exports.addVideo = async (req,res)=>{
         videoDescription : req.body.videoDescription ,
         videoLanguage : req.body.videoLanguage.toLowerCase() ,
         videoAddedToWebAppBy : req.body.videoAddedToWebAppBy,
-        videoAddedToWebApp : videoAdditionDate ,
-        videoRating : req.body.videoRating
+        videoAddedToWebApp : videoAdditionDate
     }
     try{
         await videoDatabase.create(video)
@@ -39,6 +38,23 @@ exports.addVideo = async (req,res)=>{
         errorCode : null ,
         message : "Video Data added successfully"
     });
+}
+exports.changeRatings= async (req,res)=>{
+    const videoRatingToBeChanged = await videoDatabase.findOne({videoID : req.body.videoID});
+    const userChangingRatingDetail = {
+        ratingsReceivedBy : req.body.ratingsReceivedBy,
+        ratingValue : req.body.ratingValue
+    }
+    videoRatingToBeChanged.ratingsReceived.push(userChangingRatingDetail);
+    videoRatingToBeChanged.videoRating = (videoRatingToBeChanged.videoRating + req.body.ratingValue)/2;
+    const newData = await videoDatabase.updateOne({videoID : req.body.videoID},{$set : videoRatingToBeChanged},{new : true});
+    return res.status(200).json(newData);
+}
+
+exports.deleteVideoInfo = async (req,res)=>{
+    //For Now I am not gonna check if user who added video on webapp is same as the one who is gonna delete it .
+    await videoDatabase.deleteOne({videoID : req.params.videoID});
+    return res.send(req.params.videoID);
 }
 
 exports.fetchVideoInfo = async (req,res)=>{
