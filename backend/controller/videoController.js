@@ -65,3 +65,8 @@ exports.fetchVideoInfo = async (req,res)=>{
         return res.status(400).send("Not found");
     }
 }
+
+exports.fetchViaRating = async (req,res)=>{
+    const data = await videoDatabase.find({videoRating : {"$gte" : req.query.rating }});
+    return res.json(data);
+}
