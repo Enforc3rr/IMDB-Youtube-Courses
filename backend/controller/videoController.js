@@ -46,7 +46,11 @@ exports.changeRatings= async (req,res)=>{
         ratingValue : req.body.ratingValue
     }
     videoRatingToBeChanged.ratingsReceived.push(userChangingRatingDetail);
-    videoRatingToBeChanged.videoRating = (videoRatingToBeChanged.videoRating + req.body.ratingValue)/2;
+    let rating = 0;
+    videoRatingToBeChanged.ratingsReceived.forEach(data=>{
+        rating = rating + data.ratingValue ;
+    });
+    videoRatingToBeChanged.videoRating = rating/videoRatingToBeChanged.ratingsReceived.length;
     const newData = await videoDatabase.updateOne({videoID : req.body.videoID},{$set : videoRatingToBeChanged},{new : true});
     return res.status(200).json(newData);
 }
@@ -66,7 +70,75 @@ exports.fetchVideoInfo = async (req,res)=>{
     }
 }
 
-exports.fetchViaRating = async (req,res)=>{
-    const data = await videoDatabase.find({videoRating : {"$gte" : req.query.rating }});
-    return res.json(data);
+exports.fetchViaQueries = async (req,res)=>{
+    //search via title
+    if(req.query.title && req.query.rating && req.query.topic) {
+        const data = await videoDatabase.find({
+            videoTitle : {
+                "$regex" : req.query.title,
+                "$options":"i"
+            },
+            videoRating : {
+                "$gte":req.query.rating
+            },
+            videoTopic : {
+                "$regex":req.query.topic ,
+                "$options": "i"
+            }
+        });
+        return res.status(200).json(data);
+    }else if(req.query.title && !req.query.rating && req.query.topic){
+        const data = await videoDatabase.find({
+            videoTitle : {
+                "$regex" : req.query.title,
+                "$options":"i"
+            },
+            videoTopic : {
+                "$regex":req.query.topic ,
+                "$options": "i"
+            }
+        });
+        return res.status(200).json(data);
+    }else if(req.query.title && req.query.rating && !req.query.topic){
+        const data = await videoDatabase.find({
+            videoTitle : {
+                "$regex" : req.query.title,
+                "$options":"i"
+            },
+            videoRating : {
+                "$gte":req.query.rating
+            }
+        });
+        return res.status(200).json(data);
+    }else if(req.query.title && !req.query.rating && !req.query.topic) {
+        const data = await videoDatabase.find({
+            videoTitle : {
+                "$regex" : req.query.title,
+                "$options":"i"
+            }
+        });
+        return res.status(200).json(data);
+    }else if(!req.query.title && !req.query.rating && req.query.topic){
+        const data = await videoDatabase.find({
+            videoTopic : {
+                "$regex":req.query.topic
+            }
+        });
+        return res.status(200).json(data);
+    }else if(!req.query.title && req.query.rating && req.query.topic){
+        const data = await videoDatabase.find({
+            videoRating : {
+                "$gte":req.query.rating
+            },
+            videoTopic : {
+                "$regex":req.query.topic
+            }
+        });
+        return res.status(200).json(data);
+    }else{
+        return res.status(400).json({
+            errorCode : "WrongQueryParam",
+            message : "Required query params are not present"
+        });
+    }
 }
