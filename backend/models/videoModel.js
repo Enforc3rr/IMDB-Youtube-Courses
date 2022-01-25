@@ -10,7 +10,6 @@ const mongoose = require("mongoose");
 }
 
  */
-
 const schema = new mongoose.Schema({
     videoID : {
         type : String ,
@@ -43,8 +42,9 @@ const schema = new mongoose.Schema({
     videoDescription : String ,
     videoLanguage : String ,
     videoRating: {
-     type : Number ,
-     default : 0
+        type : Number ,
+        default : 0 ,
+        max : 5
     },
     ratingsReceived : {
       type : Array ,
@@ -54,7 +54,8 @@ const schema = new mongoose.Schema({
       },
       ratingValue : {
           type : Number ,
-          required : true
+          required : true ,
+          max : 5
       }
     },
     videoAddedToWebApp : String
