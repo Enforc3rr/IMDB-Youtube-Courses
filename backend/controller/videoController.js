@@ -21,7 +21,7 @@ exports.addVideo = async (req,res)=>{
         videoTopic : req.body.videoTopic.toLowerCase() ,
         videoDescription : req.body.videoDescription ,
         videoLanguage : req.body.videoLanguage.toLowerCase() ,
-        videoAddedToWebAppBy : req.body.videoAddedToWebAppBy,
+        videoAddedToWebAppBy : req.user,
         videoAddedToWebApp : videoAdditionDate
     }
     try{
@@ -139,6 +139,36 @@ exports.fetchViaQueries = async (req,res)=>{
         return res.status(400).json({
             errorCode : "WrongQueryParam",
             message : "Required query params are not present"
+        });
+    }
+}
+
+exports.youtubeInfo = async (req,res)=>{
+    const youtubeAPIResponse = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${req.query.vid}&key=${process.env.YOUTUBE_KEY}`);
+    return res.status(201).json({
+        dataFetched : true ,
+        youtubeInfo : {
+            videoTitle : youtubeAPIResponse.data.items[0].snippet.title,
+            videoUploadedBy : youtubeAPIResponse.data.items[0].snippet.channelTitle ,
+            videoUploadedAt : youtubeAPIResponse.data.items[0].snippet.publishedAt,
+            videoThumbnailURL : `https://img.youtube.com/vi/${req.query.vid}/0.jpg`
+        }
+    })
+}
+
+exports.checkVideoAvailabilty = async (req,res)=>{
+    const videoDetailsPresent = await videoDatabase.findOne({videoID : req.query.vid});
+    if(videoDetailsPresent){
+        return res.status(200).json({
+            isVideoPresent : true ,
+            errorCode : "VIDEO_PRESENT",
+            message : "Video information is already present in Database"
+        });
+    }else{
+        return res.status(200).json({
+            isVideoPresent : false ,
+            errorCode : null,
+            message : "Video information is not present in Database"
         });
     }
 }
