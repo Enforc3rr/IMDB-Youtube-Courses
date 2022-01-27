@@ -4,10 +4,12 @@ const database = require("./configuration/databaseConfiguration");
 const dotenv = require("dotenv");
 dotenv.config({path : "./configuration/configuration.env"});
 const videoRouter = require("./routes/videoRoutes");
+const userRouter = require("./routes/userRoutes");
 
 app.use(express.json());
 app.use(express.urlencoded({extended : true})); // used for forms like the one I made for smllr ( where I send code and other details under different keys )
 app.use("/api/v1/video",videoRouter);
+app.use("/api/v1/user",userRouter);
 
 
 database()
