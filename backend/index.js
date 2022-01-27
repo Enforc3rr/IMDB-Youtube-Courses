@@ -5,7 +5,9 @@ const dotenv = require("dotenv");
 dotenv.config({path : "./configuration/configuration.env"});
 const videoRouter = require("./routes/videoRoutes");
 const userRouter = require("./routes/userRoutes");
+const cors = require("./middleware/cors");
 
+app.use(cors);
 app.use(express.json());
 app.use(express.urlencoded({extended : true})); // used for forms like the one I made for smllr ( where I send code and other details under different keys )
 app.use("/api/v1/video",videoRouter);
