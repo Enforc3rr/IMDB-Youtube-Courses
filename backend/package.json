@@ -12,9 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.25.0",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "googleapis": "^92.0.0",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^6.1.7"
   },
