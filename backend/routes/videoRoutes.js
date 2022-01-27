@@ -10,7 +10,7 @@ router.route("/ratings")
     .post(changeRatings);
 router.route("/delvideo/:videoID")
     .delete(deleteVideoInfo);
-router.route("/fetchtitle")
+router.route("/fetchquery")
     .get(fetchViaQueries);
 
 
