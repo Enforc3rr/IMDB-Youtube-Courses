@@ -9,7 +9,6 @@ router.route("/userlogin")
 
 router.route("/test")
     .get(verifyJWT , (req,res)=>{
-        console.log(req.user);
         return res.send("Protected Route Test");
     });
 
