@@ -1,0 +1,7 @@
+@media (max-width: 992px) {
+  .text-md {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
