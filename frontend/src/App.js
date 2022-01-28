@@ -1,25 +1,46 @@
+import { useEffect, useState } from "react";
+import { Rating as ReactStars } from "react-simple-star-rating";
+import { userRatingsDemo } from "./components/Data";
+import "./App.css";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { langArray, categories } from "./components/Data";
 
 function App() {
-  const [category, setCategory] = useState();
-  const [topic, setTopic] = useState();
-  const [description, setDescription] = useState();
-  const [language, setLanguage] = useState();
-  const [thumbnail, setThumbnail] = useState();
-  const [title, setTitle] = useState();
-  const [uploadedBy, setUploadedBy] = useState();
-  const [videoTopicPropertyName, setVideoTopicPropertyName] =
-    useState("Video Topic");
+  const [videoID, setVideoID] = useState("");
+  const [videoURL, setVideoURL] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoUploadedBy, setVideoUploadedBy] = useState("");
+  const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [videoCategory, setVideoCategory] = useState("");
+  const [videoTopic, setVideoTopic] = useState("");
+  const [videoRating, setVideoRating] = useState(0);
+  const [ratingsReceived, setRatingsReceived] = useState([]);
+  const [videoAddedToWebAppBy, setVideoAddedToWebAppBy] = useState("");
+
+  const [hasUserRatedThisBefore, setHasUserRatedThisBefore] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [userRatingData, setUserRatingData] = useState([]);
+
+  const setUserRatingFunction = (ratingValue) => {
+    console.log(ratingValue / 20);
+    setRating(ratingValue);
+  };
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/v1/video/youtubeinfo?vid=K1iu1kXkVoA`)
+      .get(`http://localhost:8000/api/v1/video/getvideo/K1iu1kXkVoA`)
       .then((response) => {
-        setThumbnail(response.data.youtubeInfo.videoThumbnailURL);
-        setTitle(response.data.youtubeInfo.videoTitle);
-        setUploadedBy(response.data.youtubeInfo.videoUploadedBy);
+        setVideoID(response.data.videoID);
+        setVideoURL(response.data.videoURL);
+        setVideoTitle(response.data.videoTitle);
+        setVideoUploadedBy(response.data.videoUploadedBy);
+        setVideoThumbnail(response.data.videoThumbnailURL);
+        setVideoCategory(response.data.videoCategory);
+        setVideoTopic(response.data.videoTopic);
+        setVideoRating(response.data.videoRating);
+        setRatingsReceived(() => {
+          return response.data.ratingsReceived;
+        });
+        setVideoAddedToWebAppBy(response.data.videoAddedToWebAppBy);
       })
       .catch((error) => {
         console.log(error);
@@ -27,116 +48,147 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (categories[category] === "Programming")
-      setVideoTopicPropertyName("Technology/Programming Language");
-  }, [category]);
+    if (ratingsReceived.length !== 0) {
+      for (
+        let i = ratingsReceived.length - 3;
+        i < ratingsReceived.length;
+        i++
+      ) {
+        setUserRatingData((oldValue) => {
+          return [...oldValue, ratingsReceived[i]];
+        });
+      }
+      console.log(ratingsReceived);
+    }
+  }, [ratingsReceived]);
 
-  const submitData = () => {
-    // TO add check to not leave value of category and langauge at 0.
-    const data = {
-      videoCategory: categories[category],
-      videoTopic: topic,
-      videoDescription: description,
-      language: langArray[language],
-    };
-  };
   return (
-    <div className="container d-flex justify-content-center align-items-center shadow-lg ">
+    <div className="container" style={{ minHeight: "100vh" }}>
       <div className="row">
-        <div className="col-sm-12 col-md-12 col-lg-12 text-center">
-          <img src={thumbnail} alt="#" className="img-fluid p-3" />
+        <div className="col-12 col-lg-12 text-center">
+          <img className="img-fluid" src={videoThumbnail} alt="" />
         </div>
-        <div className="col-sm-12 col-md-12 col-lg-12 text-center">
-          <h1>{title}</h1>
+        <div className="col-12 col-lg-12 text-center">
+          <h1>{videoTitle}</h1>
         </div>
-        <div className="col-sm-12 col-md-12 col-lg-12 text-center ">
-          <h2>
-            By <u>{uploadedBy}</u>
-          </h2>
+        <div className="col-12 col-lg-12 text-center">
+          <h2>By {videoUploadedBy}</h2>
         </div>
-        <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
-          {/* Video Category  */}
-          <div className="form-group row mt-4">
-            <div className="col-lg-6 col-sm-12 text-center">
-              <h3 htmlFor="videoCategory">Video Category</h3>
-            </div>
-            <div className="col-lg-6 col-sm-12">
-              <select
-                className="form-select text-center"
-                style={{ width: "100%", height: "100%" }}
-                id="videoCategories"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+        <div className="col-12 col-lg-12 text-center">
+          <h4>Details Added By {videoAddedToWebAppBy} </h4>
+        </div>
+        <div className="col-12 col-lg-10">
+          <div className="row">
+            {hasUserRatedThisBefore ? (
+              <div className="row" style={{ width: "100%", margin: "auto" }}>
+                <div className="col-lg-4 col-sm-12 text-center">
+                  <h4>Your Rating</h4>
+                </div>
+                <div className="col-lg-8 col-sm-12 text-md">
+                  <ReactStars
+                    count={5}
+                    value={4.2}
+                    size={25}
+                    edit={false}
+                    activeColor="#ffd700"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div
+                className="row"
+                style={{
+                  width: "100%",
+                  margin: "auto",
+                }}
               >
-                {categories.map((data, index) => {
-                  return <option value={index}>{data}</option>;
-                })}
-              </select>
+                <div className="col-lg-4 col-sm-12 col-md-4 text-center">
+                  <h4>Rate :</h4>
+                </div>
+                <div className="col-lg-8 col-md-8 col-sm-12 text-md">
+                  <ReactStars
+                    count={5}
+                    ratingValue={rating}
+                    size={"25px"}
+                    onClick={setUserRatingFunction}
+                    allowHover={true}
+                    allowHalfIcon={true}
+                    transition={true}
+                    activeColor="#ffd700"
+                  />
+                </div>
+              </div>
+            )}
+            <div className="col-lg-4 col-sm-12 text-center">
+              <h4>Ratings</h4>
             </div>
-          </div>
-          {/* Video Topic */}
-          <div className="form-group row mt-4">
-            <div className="col-lg-6 col-sm-12 text-center">
-              <h3 htmlFor="videoTopic">{videoTopicPropertyName}</h3>
-            </div>
-            <div className="col-lg-6 col-sm-12">
-              <input
-                id="videoTopic"
-                placeholder={videoTopicPropertyName}
-                className="form-control"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                style={{ width: "100%" }}
+            <div className="col-lg-8 col-sm-12 text-md">
+              <ReactStars
+                size={"25px"}
+                readonly={true}
+                initialValue={videoRating}
+                transition={true}
               />
             </div>
-          </div>
-          {/* Video Description */}
-          <div className="form-group row mt-4">
-            <div className="col-lg-6 col-sm-12 text-center">
-              <h3 htmlFor="videoDescription">Video Description</h3>
+            <div className="col-lg-4 col-sm-12 text-center">
+              <h4>Category</h4>
             </div>
-            <div className="col-lg-6 col-sm-12">
-              <input
-                id="videoDescription"
-                className="form-control"
-                placeholder="Enter Small Video Description"
-                style={{ width: "100%" }}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+            <div className="col-lg-8 col-sm-12 text-md">
+              <h4>{videoCategory}</h4>
+            </div>
+            <div className="col-lg-4 col-sm-12 text-center">
+              <h4>Topic</h4>
+            </div>
+            <div className="col-lg-8 col-sm-12 text-md">
+              <h4>{videoTopic}</h4>
             </div>
           </div>
-          {/* Language */}
-          <div className="form-group row mt-4">
-            <div className="col-lg-6 col-sm-12 text-center">
-              <h3 htmlFor="videoLanguage">Language</h3>
-            </div>
-            <div className="col-lg-6 col-sm-12">
-              <select
-                className="form-select text-center"
-                style={{ width: "100%", height: "100%" }}
-                id="videoLanguage"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-              >
-                {langArray.map((data, index) => {
+        </div>
+        <div className="col-lg-2 col-12">
+          <div className="row" style={{ border: "2px solid black" }}>
+            <table style={{ width: "100%", textAlign: "center" }}>
+              <thead>
+                <tr>
+                  <th
+                    style={{ borderRight: "2px solid black", fontSize: "25px" }}
+                  >
+                    #
+                  </th>
+                  <th
+                    style={{ borderRight: "1px solid black", fontSize: "25px" }}
+                  >
+                    User
+                  </th>
+                  <th style={{ fontSize: "25px" }}>Rating</th>
+                </tr>
+              </thead>
+              <tbody style={{ borderTop: "5px solid black" }}>
+                {userRatingData.map((value, index) => {
                   return (
-                    <option key={index} value={index}>
-                      {data}
-                    </option>
+                    <tr>
+                      <td
+                        style={{
+                          borderRight: "2px solid black",
+                          fontSize: "20px",
+                        }}
+                      >
+                        {index + 1}
+                      </td>
+                      <td
+                        style={{
+                          borderRight: "1px solid black",
+                          fontSize: "20px",
+                        }}
+                      >
+                        {value.ratingsReceivedBy}
+                      </td>
+                      <td style={{ fontSize: "20px" }}>{value.ratingValue}</td>
+                    </tr>
                   );
                 })}
-              </select>
-            </div>
+              </tbody>
+            </table>
           </div>
-        </div>
-        <div
-          className="col-lg-12 col-sm-12 text-center"
-          style={{ borderTop: "2px solid #D3D3D3 " }}
-        >
-          <button className="btn btn-outline-success" onClick={submitData}>
-            Click Here To Add
-          </button>
         </div>
       </div>
     </div>
