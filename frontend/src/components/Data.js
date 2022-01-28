@@ -25,3 +25,10 @@ export const categories = [
   "UI",
   "VideoGames",
 ];
+
+export const userRatingsDemo = [
+  { ratingReceivedBy: "A", ratingValue: 5 },
+  { ratingReceivedBy: "B", ratingValue: 5 },
+  { ratingReceivedBy: "C", ratingValue: 5 },
+  { ratingReceivedBy: "D", ratingValue: 5 },
+];
