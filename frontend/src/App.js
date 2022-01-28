@@ -48,11 +48,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (ratingsReceived.length !== 0) {
+    if (ratingsReceived.length !== 0 && userRatingData.length < 3) {
       for (
-        let i = ratingsReceived.length - 3;
-        i < ratingsReceived.length;
-        i++
+        let i = ratingsReceived.length - 1;
+        i > ratingsReceived.length - 4;
+        i--
       ) {
         setUserRatingData((oldValue) => {
           return [...oldValue, ratingsReceived[i]];
