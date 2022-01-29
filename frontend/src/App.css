@@ -5,3 +5,7 @@
     align-items: center;
   }
 }
+
+a :hover {
+  cursor: default;
+}
