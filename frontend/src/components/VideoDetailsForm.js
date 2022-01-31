@@ -66,9 +66,10 @@ function VideoDetailsForm(props) {
             </div>
             <div className="col-sm-12 col-md-12 col-lg-12 text-center ">
               <h2>
-                By <u>{uploadedBy}</u>
+                By <u>{uploadedBy}</u>{" "}
               </h2>
             </div>
+
             <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
               {/* Video Category  */}
               <div className="form-group row mt-4">
