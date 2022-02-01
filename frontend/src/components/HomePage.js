@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import "./ButtonHomePage.css";
 
 function HomePage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -51,7 +52,7 @@ function HomePage() {
               >
                 <ul>
                   <li style={{ listStyle: "none" }}>
-                    <div className="d-flex  justify-content-center text-center">
+                    <div className="d-flex justify-content-center text-center">
                       <p
                         className="display-4"
                         style={{
@@ -90,6 +91,9 @@ function HomePage() {
                   </li>
                 </ul>
               </div>
+            </div>
+            <div className="col-lg-12 col-sm-12 col-md-12  mt-2 d-flex justify-content-center align-items-center ">
+              <button className="btn-grad">Browse</button>
             </div>
           </div>
         </div>
