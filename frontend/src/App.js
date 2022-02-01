@@ -16,6 +16,12 @@ function App() {
     setIsPageLoading(false);
   }, []);
 
+  const addViaEnter = (e) => {
+    if (e.keyCode === 13) {
+      onSearchHandle();
+    }
+  };
+
   const onSearchHandle = () => {
     let url;
     if (search !== "" && rating !== 0 && topic !== 0) {
@@ -49,6 +55,7 @@ function App() {
             url = null;
           })
           .catch((error) => {
+            setIsPageLoading(false);
             console.log(error);
           });
       }
@@ -56,7 +63,7 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ minHeight: "100vh" }}>
       <div className="row">
         <div className="col-sm-12 col-lg-7 col-md-12 mb-3 mt-3 p-3">
           <input
@@ -67,6 +74,7 @@ function App() {
               fontSize: "5vh",
               fontWeight: "bold",
             }}
+            onKeyDown={addViaEnter}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -85,6 +93,7 @@ function App() {
                   fontSize: "3vh",
                   fontWeight: "bold",
                 }}
+                onKeyDown={addViaEnter}
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
               />

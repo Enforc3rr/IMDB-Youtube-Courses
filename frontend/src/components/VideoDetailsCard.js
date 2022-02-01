@@ -59,21 +59,19 @@ function VideoDetailsCard(props) {
             <h4 className="card-title">{title}</h4>
           </div>
           <div className="card-body">
-            <p className="card-text">
-              <ul>
-                <li>By : {uploadedBy}</li>
-                <li>Topic : {topic}</li>
-                <li>
-                  Score :
-                  <ReactStars
-                    size={"25px"}
-                    readonly={true}
-                    transition={true}
-                    initialValue={totalRating}
-                  />
-                </li>
-              </ul>
-            </p>
+            <ul className="card-text">
+              <li>By : {uploadedBy}</li>
+              <li>Topic : {topic}</li>
+              <li>
+                Score :
+                <ReactStars
+                  size={"25px"}
+                  readonly={true}
+                  transition={true}
+                  initialValue={totalRating}
+                />
+              </li>
+            </ul>
           </div>
           <div className="card-footer text-center">
             <button
