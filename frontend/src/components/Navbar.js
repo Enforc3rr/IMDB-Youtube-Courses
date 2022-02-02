@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-function Navbar() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
+function Navbar(props) {
   const [loggedInUserName, setLoggedUserLoggedIn] = useState("Enforc3rr");
   return (
     <>
@@ -49,7 +48,7 @@ function Navbar() {
             </span>
           </a>
           <div className="ml-auto">
-            {!isUserLoggedIn ? (
+            {!props.isUserLoggedIn ? (
               <div>
                 <a href="/" className="mx-auto mr-5">
                   <span
@@ -78,7 +77,7 @@ function Navbar() {
                     fontSize: "100%",
                   }}
                 >
-                  {loggedInUserName}
+                  {props.isUserLoggedIn}
                 </span>
                 <img
                   src="https://cdn-icons.flaticon.com/png/512/4889/premium/4889066.png?token=exp=1643697919~hmac=dc6d88f7cb7beb4d92e6a09822622d1c"
