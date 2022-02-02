@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
 import "./ButtonHomePage.css";
 
@@ -13,7 +12,6 @@ function HomePage() {
   const mainPage = () => {
     return (
       <>
-        <Navbar />
         <div
           className="container-fluid"
           style={{
@@ -93,11 +91,19 @@ function HomePage() {
               </div>
             </div>
             <div className="col-lg-12 col-sm-12 col-md-12  mt-2 d-flex justify-content-center align-items-center ">
-              <button className="btn-grad">Browse</button>
+              <button
+                className="btn"
+                style={{
+                  border: "2px solid #800000",
+                  color: "wheat",
+                  width: "25%",
+                }}
+              >
+                Browse
+              </button>
             </div>
           </div>
         </div>
-        <Footer />
       </>
     );
   };
