@@ -30,3 +30,51 @@ a :hover {
     #2d2e2b
   );
 }
+
+.containerSignup {
+  width: 50%;
+}
+
+.inputSignup {
+  color: black;
+  border: 2px solid #2d2e2b;
+  border-block-color: #800;
+  font-size: 1.3em;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.658);
+  margin: 2%;
+  width: 70%;
+}
+
+.btnSignup {
+  width: 20%;
+}
+.btnSignup:hover {
+  text-decoration: underline;
+  text-decoration-color: #800;
+}
+.inputSignup:focus {
+  outline: none !important;
+  border: 2px solid #800;
+  box-shadow: 0 0 5px red;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+@media (max-width: 992px) {
+  .inputSignup {
+    color: black;
+    border: 2px solid #2d2e2b;
+    border-block-color: #800;
+    font-size: 1.3em;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.658);
+    margin: 2%;
+    width: 100%;
+  }
+  .btnSignup {
+    width: 100%;
+  }
+  .containerSignup {
+    width: 80%;
+  }
+}
