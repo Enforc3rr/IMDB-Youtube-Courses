@@ -31,7 +31,7 @@ function Footer() {
           href="https://steamcommunity.com/id/Enforc3rr/"
         >
           {`Enforc3rr `}
-          <i class="fas fa-headset"></i>
+          <i className="fas fa-headset"></i>
         </a>
       </div>
     </footer>
