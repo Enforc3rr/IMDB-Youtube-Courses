@@ -22,7 +22,7 @@ function Navbar(props) {
           <a href="/" style={{ marginRight: "50px", marginLeft: "20px" }}>
             <img
               src="https://cdn-icons-png.flaticon.com/512/1055/1055645.png"
-              classNameName="rounded-circle"
+              className="rounded-circle"
               height={"22"}
               loading="lazy"
             />
@@ -30,7 +30,7 @@ function Navbar(props) {
           <a>
             <img
               src="https://cdn-icons.flaticon.com/png/512/4889/premium/4889066.png?token=exp=1643697919~hmac=dc6d88f7cb7beb4d92e6a09822622d1c"
-              classNameName="rounded-circle"
+              className="rounded-circle"
               height={"22"}
               loading="lazy"
             />
@@ -81,7 +81,7 @@ function Navbar(props) {
                 </span>
                 <img
                   src="https://cdn-icons.flaticon.com/png/512/4889/premium/4889066.png?token=exp=1643697919~hmac=dc6d88f7cb7beb4d92e6a09822622d1c"
-                  classNameName="rounded-circle"
+                  className="rounded-circle"
                   height={"30"}
                   loading="lazy"
                   style={{ marginLeft: "20px" }}
