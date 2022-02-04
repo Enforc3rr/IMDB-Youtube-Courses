@@ -27,6 +27,10 @@ function Login() {
       </div>
     );
   };
+  const dataToBeSent = {
+    username,
+    password,
+  };
   const loginButtonHandle = () => {
     const config = {
       header: {
@@ -34,7 +38,13 @@ function Login() {
       },
     };
 
-    Axios.post("http://localhost:8000/api/v1/user/userlogin");
+    Axios.post(
+      "http://localhost:8000/api/v1/user/userlogin",
+      dataToBeSent,
+      config
+    )
+      .then((res) => {})
+      .catch((error) => {});
   };
   const login = () => {
     return (
