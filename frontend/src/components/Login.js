@@ -2,6 +2,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useEffect, useState } from "react";
 import "../App.css";
+import Axios from "axios";
 
 function Login() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -26,6 +27,15 @@ function Login() {
       </div>
     );
   };
+  const loginButtonHandle = () => {
+    const config = {
+      header: {
+        "content-type": "application/json",
+      },
+    };
+
+    Axios.post("http://localhost:8000/api/v1/user/userlogin");
+  };
   const login = () => {
     return (
       <>
@@ -39,7 +49,11 @@ function Login() {
             <div className="col-lg-12 col-md-12 col-sm-12 text-center">
               <p
                 className="display-2"
-                style={{ color: "beige", textDecoration: "underline" }}
+                style={{
+                  color: "beige",
+                  textDecoration: "underline",
+                  textDecorationColor: "#800",
+                }}
               >
                 Login
               </p>
@@ -57,45 +71,28 @@ function Login() {
                     style={{
                       color: "beige",
                       textDecoration: "underline",
-                      textDecorationColor: "black",
+                      textDecorationColor: "#800",
                       textDecorationThickness: "8px",
                     }}
                   >
                     Youtube Courses IMDB
                   </p>
                 </div>
-                <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-column justify-content-center align-items-center ">
+                <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-column justify-content-center align-items-center mt-5">
                   <div className="d-flex flex-column justify-content-center align-items-center shadow p-5 loginCard ">
+                    <input className="inputLogin" placeholder="Username" />
                     <input
-                      style={{
-                        width: "100%",
-                        height: "15%",
-                        margin: "15px",
-                        backgroundColor: "rgba(255, 255 ,255, 0.8)",
-                        color: "Black",
-                        fontSize: "1.5em",
-                        fontWeight: "bold",
-                      }}
-                      className="form-control"
-                      placeholder="Username"
-                    />
-                    <input
-                      style={{
-                        width: "100%",
-                        height: "15%",
-                        margin: "15px",
-                        backgroundColor: "rgba(255, 255 ,255, 0.8)",
-                        color: "black",
-                        fontSize: "1.5em",
-                        fontWeight: "bold",
-                      }}
-                      className="form-control"
+                      className="inputLogin"
                       placeholder="Password"
                       type="password"
                     />
                     <button
-                      className="btn btn-outline-light "
-                      style={{ width: "auto", margin: "15px" }}
+                      className="btn btn-outline-danger"
+                      style={{
+                        width: "auto",
+                        margin: "15px",
+                      }}
+                      onClick={loginButtonHandle}
                     >
                       Login
                     </button>
