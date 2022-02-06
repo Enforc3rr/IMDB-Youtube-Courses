@@ -47,8 +47,10 @@ function Login() {
     )
       .then((res) => {
         console.log(res.headers);
+        localStorage.setItem("JWT_YOU-IMDB", res.headers.authorization);
         // console.log(res.data);
         // console.log(res.headers);
+        console.log(localStorage.getItem("JWT_YOU-IMDB"));
       })
       .catch((error) => {
         Swal.fire({
