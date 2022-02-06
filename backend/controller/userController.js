@@ -29,6 +29,7 @@ exports.userSignup = async (req,res)=>{
 }
 
 exports.userLogin = async (req,res)=>{
+    console.log(req.body);
     const user = await userDatabase.findOne({username : req.body.username});
     if(!user){
         return res.status(400).json({
