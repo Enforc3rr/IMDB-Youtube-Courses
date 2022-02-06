@@ -3,6 +3,9 @@ import Footer from "./Footer";
 import { useEffect, useState } from "react";
 import "../App.css";
 import Axios from "axios";
+import Swal from "sweetalert2";
+
+// Yet to learn how to manage Cookie in MERN stack
 
 function Login() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -37,14 +40,24 @@ function Login() {
         "content-type": "application/json",
       },
     };
-
     Axios.post(
       "http://localhost:8000/api/v1/user/userlogin",
       dataToBeSent,
       config
     )
-      .then((res) => {})
-      .catch((error) => {});
+      .then((res) => {
+        console.log(res.headers);
+        // console.log(res.data);
+        // console.log(res.headers);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Either username or password is Wrong",
+          footer: '<a href="/forgotpassword">Forgot Password ?</a>',
+        });
+      });
   };
   const login = () => {
     return (
@@ -56,9 +69,9 @@ function Login() {
           style={{ minHeight: "100vh" }}
         >
           <div className="row">
-            <div className="col-lg-12 col-md-12 col-sm-12 text-center">
+            <div className="col-lg-12 col-md-12 col-sm-12 text-center ">
               <p
-                className="display-2"
+                className="display-2 animate__animated animate__bounce"
                 style={{
                   color: "beige",
                   textDecoration: "underline",
@@ -88,13 +101,20 @@ function Login() {
                     Youtube Courses IMDB
                   </p>
                 </div>
-                <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-column justify-content-center align-items-center mt-5">
+                <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-column justify-content-center align-items-center mt-5 mb-5">
                   <div className="d-flex flex-column justify-content-center align-items-center shadow p-5 loginCard ">
-                    <input className="inputLogin" placeholder="Username" />
+                    <input
+                      className="inputLogin"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
                     <input
                       className="inputLogin"
                       placeholder="Password"
                       type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
                       className="btn btn-outline-danger"
