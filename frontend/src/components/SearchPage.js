@@ -63,92 +63,94 @@ function SearchPage() {
   };
 
   return (
-    <div className="container" style={{ minHeight: "100vh" }}>
-      <div className="row">
-        <div className="col-sm-12 col-lg-7 col-md-12 mb-3 mt-3 p-3">
-          <input
-            placeholder="Search Here..."
-            style={{
-              width: "100%",
-              height: "10vh",
-              fontSize: "5vh",
-              fontWeight: "bold",
-            }}
-            onKeyDown={addViaEnter}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="col-sm-12 col-lg-5 col-md-12 mb-3 mt-3 p-3">
-          <div className="row">
-            <div
-              className="col-sm-12 col-lg-12 col-md-12 mt-1"
-              style={{ height: "50%" }}
-            >
-              <input
-                placeholder="Topic..."
-                style={{
-                  width: "100%",
-                  height: "50%",
-                  fontSize: "3vh",
-                  fontWeight: "bold",
-                }}
-                onKeyDown={addViaEnter}
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-              />
-            </div>
+    <div className="container-fluid containerUser">
+      <div className="container" style={{ minHeight: "100vh" }}>
+        <div className="row">
+          <div className="col-sm-12 col-lg-7 col-md-12 mb-3 mt-3 p-3">
+            <input
+              placeholder="Search Here..."
+              style={{
+                width: "100%",
+                height: "10vh",
+                fontSize: "5vh",
+                fontWeight: "bold",
+              }}
+              onKeyDown={addViaEnter}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <div className="col-sm-12 col-lg-5 col-md-12 mb-3 mt-3 p-3">
+            <div className="row">
+              <div
+                className="col-sm-12 col-lg-12 col-md-12 mt-1"
+                style={{ height: "50%" }}
+              >
+                <input
+                  placeholder="Topic..."
+                  style={{
+                    width: "100%",
+                    height: "50%",
+                    fontSize: "3vh",
+                    fontWeight: "bold",
+                  }}
+                  onKeyDown={addViaEnter}
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                />
+              </div>
 
-            <div
-              className="col-sm-12 col-lg-12 col-md-12 mt-1"
-              style={{ height: "50%" }}
-            >
-              <div className="row">
-                <div className="col-sm-2 col-lg-2 col-md-2 text-center">
-                  <h5>Ratings</h5>
-                </div>
-                <div className="col-sm-10 col-lg-10 col-md-10 text-center">
-                  <select
-                    className="form-select"
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                    style={{ width: "100%" }}
-                  >
-                    {ratingsArray.current.map((value, index) => {
-                      return <option key={index}>{value}</option>;
-                    })}
-                  </select>
+              <div
+                className="col-sm-12 col-lg-12 col-md-12 mt-1"
+                style={{ height: "50%" }}
+              >
+                <div className="row">
+                  <div className="col-sm-2 col-lg-2 col-md-2 text-center text-white">
+                    <h5>Ratings</h5>
+                  </div>
+                  <div className="col-sm-10 col-lg-10 col-md-10 text-center">
+                    <select
+                      className="form-select"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                      style={{ width: "100%" }}
+                    >
+                      {ratingsArray.current.map((value, index) => {
+                        return <option key={index}>{value}</option>;
+                      })}
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          className="col-sm-12 col-lg-12 col-md-12 mt-1 text-center mb-2"
-          style={{
-            borderBottom: "2px solid black",
-          }}
-        >
-          <button className="btn btn-outline-success" onClick={onSearchHandle}>
-            Search
-          </button>
-        </div>
-        <div className="container">
-          {isPageLoading ? (
-            <div className="container">
-              <div className="spinner-grow"> </div>
-            </div>
-          ) : (
-            <div className="row">
-              {responseArray.map((value, index) => {
-                return (
-                  <div className="col-sm-12 col-md-6 col-lg-4" key={index}>
-                    <VideoDetailsCard data={value} />
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <div
+            className="col-sm-12 col-lg-12 col-md-12 mt-1 text-center mb-2"
+            style={{
+              borderBottom: "2px solid black",
+            }}
+          >
+            <button className="btn btn-outline-danger" onClick={onSearchHandle}>
+              Search
+            </button>
+          </div>
+          <div className="container">
+            {isPageLoading ? (
+              <div className="container">
+                <div className="spinner-grow"> </div>
+              </div>
+            ) : (
+              <div className="row">
+                {responseArray.map((value, index) => {
+                  return (
+                    <div className="col-sm-12 col-md-6 col-lg-4" key={index}>
+                      <VideoDetailsCard data={value} />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
