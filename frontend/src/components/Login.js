@@ -1,17 +1,20 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../App.css";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import { LoginContext } from "../helper/LoginContext";
+import { useNavigate } from "react-router-dom";
 
 // Yet to learn how to manage Cookie in MERN stack
 
 function Login() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsPageLoading(false);
@@ -46,11 +49,9 @@ function Login() {
       config
     )
       .then((res) => {
-        console.log(res.headers);
-        localStorage.setItem("JWT_YOU-IMDB", res.headers.authorization);
-        // console.log(res.data);
-        // console.log(res.headers);
-        console.log(localStorage.getItem("JWT_YOU-IMDB"));
+        setIsUserLoggedIn(true);
+        localStorage.setItem("tokenYoutubeIMDB", res.headers.authorization);
+        navigate("/");
       })
       .catch((error) => {
         Swal.fire({
