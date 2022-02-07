@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 function Navbar(props) {
-  const [loggedInUserName, setLoggedUserLoggedIn] = useState("Enforc3rr");
   return (
     <>
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
