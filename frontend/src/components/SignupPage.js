@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import "../App.css";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Axios from "axios";
+import { LoginContext } from "../helper/LoginContext";
 
 function SignupPage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -17,6 +18,7 @@ function SignupPage() {
   const [waitingForFormResponse, setWaitingForFormResponse] = useState(false);
   const [displayingResponse, setDisplayingResponse] = useState(false);
   const [responseText, setReponseText] = useState("");
+  const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
 
   useEffect(() => {
     setIsPageLoading(false);
@@ -201,7 +203,7 @@ function SignupPage() {
   const Signup = () => {
     return (
       <>
-        <Navbar />
+        <Navbar login={{ isUserLoggedIn, setIsUserLoggedIn }} />
         <div
           className="container-fluid containerUser d-flex justify-content-center align-items-center flex-column text-center"
           style={{ minHeight: "100vh" }}
