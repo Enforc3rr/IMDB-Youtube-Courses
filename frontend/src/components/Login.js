@@ -65,7 +65,7 @@ function Login() {
   const login = () => {
     return (
       <>
-        <Navbar isUserLoggedIn={isUserLoggedIn} />
+        <Navbar login={{ isUserLoggedIn, setIsUserLoggedIn }} />
 
         <div
           className="container-fluid containerUser"
