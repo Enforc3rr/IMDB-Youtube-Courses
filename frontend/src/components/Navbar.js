@@ -1,6 +1,28 @@
-import React, { useState } from "react";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
 
 function Navbar(props) {
+  const [usernameOfLoggedInUser, setUsernameOfLoggedInUser] = useState("");
+  useEffect(() => {
+    if (
+      props.login.isUserLoggedIn &&
+      JSON.stringify(localStorage.getItem("tokenYoutubeIMDB"))
+    ) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
+        },
+      };
+      Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+        .then((res) => {
+          setUsernameOfLoggedInUser(res.data.username);
+        })
+        .catch((error) => {
+          console.log(error);
+          props.login.setIsUserLoggedIn(false);
+        });
+    }
+  });
   return (
     <>
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -47,7 +69,7 @@ function Navbar(props) {
             </span>
           </a>
           <div className="ml-auto">
-            {!props.isUserLoggedIn ? (
+            {!props.login.isUserLoggedIn ? (
               <div>
                 <a href="/" className="mx-auto mr-5">
                   <span
@@ -67,7 +89,7 @@ function Navbar(props) {
                 </a>
               </div>
             ) : (
-              <a>
+              <a href={`/profile/${usernameOfLoggedInUser}`}>
                 <span
                   style={{
                     color: "beige",
@@ -76,7 +98,7 @@ function Navbar(props) {
                     fontSize: "100%",
                   }}
                 >
-                  {props.isUserLoggedIn}
+                  {props.login.isUserLoggedIn}
                 </span>
                 <img
                   src="https://cdn-icons.flaticon.com/png/512/4889/premium/4889066.png?token=exp=1643697919~hmac=dc6d88f7cb7beb4d92e6a09822622d1c"
