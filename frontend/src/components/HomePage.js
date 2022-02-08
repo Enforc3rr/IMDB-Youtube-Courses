@@ -7,7 +7,7 @@ function HomePage() {
   useEffect(() => {
     setTimeout(() => {
       setIsPageLoading(false);
-    }, 2000);
+    }, 500);
   }, []);
   const mainPage = () => {
     return (
