@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {userSignup , userLogin} = require("../controller/userController");
+const {userSignup , userLogin,userDetails} = require("../controller/userController");
 const {verifyJWT} = require("../middleware/jwtAuthentication");
 router.route("/usersignup")
     .post(userSignup);
 router.route("/userlogin")
     .post(userLogin);
+router.route("/userdetails")
+    .get(verifyJWT,userDetails);
 
 router.route("/test")
     .get(verifyJWT , (req,res)=>{

@@ -3,6 +3,23 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 
+exports.userDetails = async (req,res)=>{
+    const user = await userDatabase.findById(req.user);
+    if(user){
+        return res.status(200).json({
+            name : user.name ,
+            username : user.username
+        });
+    }else{
+        return res.status(400).json({
+            userLoggedIn : false ,
+            errorCode : "NOT_FOUND" ,
+            message : "user with such username does not exist"
+        });
+    }
+}
+
+
 exports.userSignup = async (req,res)=>{
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
