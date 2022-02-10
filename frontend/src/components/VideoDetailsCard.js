@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Rating as ReactStars } from "react-simple-star-rating";
+import "../App.css";
 
 function VideoDetailsCard(props) {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -46,7 +47,15 @@ function VideoDetailsCard(props) {
       {isPageLoading ? (
         skeletonLoadingEffect()
       ) : (
-        <div className="card shadow m-3" style={{ height: "75vh" }}>
+        <div
+          className="card shadow m-3 videoDetailsCard"
+          style={{
+            minHeight: "75vh",
+            borderRadius: "15px",
+            color: "black",
+            border: "1px solid black",
+          }}
+        >
           <div className="card-header text-center p-2">
             <img
               src={thumbnail}
@@ -55,13 +64,16 @@ function VideoDetailsCard(props) {
               className="img-fluid"
             />
           </div>
-          <div className="card-body text-center">
-            <h4 className="card-title">{title}</h4>
+          <div className="card-body text-center" style={{ height: "10vh" }}>
+            <h5 className="card-title videoCardTitle">{title}</h5>
           </div>
-          <div className="card-body">
-            <ul className="card-text">
+          <div
+            className="card-body d-flex justify-content-center align-items-center"
+            style={{ fontSize: "1em" }}
+          >
+            <ul>
               <li>By : {uploadedBy}</li>
-              <li>Topic : {topic}</li>
+              <li>Topic : {topic[0].toUpperCase() + topic.substring(1)}</li>
               <li>
                 Score :
                 <ReactStars
@@ -73,15 +85,27 @@ function VideoDetailsCard(props) {
               </li>
             </ul>
           </div>
-          <div className="card-footer text-center">
+          <div
+            className="card-footer text-center d-flex justify-content-center align-items-center"
+            style={{ borderTopColor: "black", borderTopWidth: "2px" }}
+          >
             <button
               type="button"
               onClick={() => {
                 window.open(videoLink);
               }}
-              className="btn btn-primary"
+              className="videoDetailsCardButton"
             >
               Video Link
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.open(videoLink);
+              }}
+              className="videoDetailsCardButton"
+            >
+              Video Details
             </button>
           </div>
         </div>
