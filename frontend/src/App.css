@@ -20,6 +20,41 @@ a :hover {
   );
 }
 
+.videoDetailsCard {
+  background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(0, 0, 0, 0.15) 100%
+    ),
+    radial-gradient(
+        at top center,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(0, 0, 0, 0.4) 120%
+      )
+      #989898;
+  background-blend-mode: multiply, multiply;
+  transition: transform 0.2s;
+
+  width: "90%";
+}
+.videoDetailsCard:hover {
+  transform: scale(1.1);
+}
+.videoDetailsCardButton {
+  height: 55px;
+  width: 50%;
+  margin: 5px;
+  border-radius: 5px;
+  color: wheat;
+  border: 2px solid #800;
+  background-color: #3b3b3b;
+  transition: transform 1s;
+}
+.videoDetailsCardButton:hover {
+  transform: scale(1.1);
+  text-decoration: underline;
+  text-decoration-color: #800;
+}
 .loginCard {
   background-image: linear-gradient(
     to bottom,
