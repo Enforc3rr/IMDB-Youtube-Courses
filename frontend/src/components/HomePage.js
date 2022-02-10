@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Footer from "./Footer";
 import "./ButtonHomePage.css";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+  const navigate = useNavigate();
   const [isPageLoading, setIsPageLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setIsPageLoading(false);
     }, 500);
   }, []);
+
   const mainPage = () => {
     return (
       <>
@@ -97,6 +100,9 @@ function HomePage() {
                   border: "2px solid #800000",
                   color: "wheat",
                   width: "25%",
+                }}
+                onClick={() => {
+                  navigate("/search");
                 }}
               >
                 Browse
