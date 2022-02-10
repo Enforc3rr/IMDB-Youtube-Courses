@@ -81,6 +81,10 @@ function SearchPage() {
                   height: "10vh",
                   fontSize: "5vh",
                   fontWeight: "bold",
+                  borderRadius: "10px",
+                  outline: "none",
+                  borderBlock: "0px",
+                  border: "0px",
                 }}
                 onKeyDown={addViaEnter}
                 value={search}
