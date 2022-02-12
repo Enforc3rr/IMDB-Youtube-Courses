@@ -1,17 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Rating as ReactStars } from "react-simple-star-rating";
 import "../App.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import LoadingAnimation from "./LoadingAnimation";
+import { LoginContext } from "../helper/LoginContext";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import ReactPlayer from "react-player";
+import Axios from "axios";
 
 /*
- * To change the url to fetch videoID from params .
- * Adding Ratings data to the server
+ * To change the url to fetch videoID from params . [done]
+ * Adding Ratings data to the server. [will do it after fixing "/logout" bug]
  * To Add certains animations etc in the UI .
  * Add Channel Link and Details Added By User(his profile Link).
  */
 function VideoDetailsDisplay() {
-  const [loggedInUser, setLoggedInUser] = useState("TestUser");
+  const [loggedInUser, setLoggedInUser] = useState("");
+  const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
 
   let { videoID } = useParams();
 
@@ -53,9 +60,31 @@ function VideoDetailsDisplay() {
           return response.data.ratingsReceived;
         });
         setVideoAddedToWebAppBy(response.data.videoAddedToWebAppBy);
+
+        if (
+          isUserLoggedIn &&
+          JSON.stringify(localStorage.getItem("tokenYoutubeIMDB"))
+        ) {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(
+                "tokenYoutubeIMDB"
+              )}`,
+            },
+          };
+          Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+            .then((res) => {
+              setLoggedInUser(res.data.username);
+            })
+            .catch((error) => {
+              console.log(error);
+              setIsUserLoggedIn(false);
+            });
+        }
         setIsPageLoading(false);
       })
       .catch((error) => {
+        //To Add No VideoID found error message/page
         console.log(error);
       });
   }, []);
@@ -113,39 +142,42 @@ function VideoDetailsDisplay() {
       userRatingGotMounted.current = true;
     }
   }, [userRating]);
+  /*
+  <div className="col-12 col-lg-12 text-center">
+              <a href={videoURL}>
+                <img className="img-fluid" src={videoThumbnail} alt="" />
+              </a>
+            </div>
+  */
 
   // Functions
   const setUserRatingFunction = (ratingValue) => {
     setRating(ratingValue);
   };
-
-  return (
-    <div>
-      {isPageLoading ? (
+  const detailsContainer = () => {
+    return (
+      <>
         <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ width: "100wv", height: "100vh" }}
+          className="container p-4"
+          style={{ minHeight: "100vh", color: "beige" }}
         >
-          <div
-            className="spinner-grow"
-            style={{ width: "20vh", height: "20vh" }}
-          ></div>
-        </div>
-      ) : (
-        <div className="container" style={{ minHeight: "100vh" }}>
           <div className="row">
-            <div className="col-12 col-lg-12 text-center">
-              <a href={videoURL}>
-                <img className="img-fluid" src={videoThumbnail} alt="" />
-              </a>
+            <div className="col-12 col-lg-12 d-flex justify-content-center mb-4">
+              <ReactPlayer url={videoURL} light={true} />
             </div>
-            <div className="col-12 col-lg-12 text-center">
+            <div
+              className="col-12 col-lg-12 text-center"
+              style={{
+                textDecoration: "underline",
+                textDecorationColor: "#800",
+              }}
+            >
               <h1>{videoTitle}</h1>
             </div>
             <div className="col-12 col-lg-12 text-center">
               <h2>By {videoUploadedBy}</h2>
             </div>
-            <div className="col-12 col-lg-12 text-center">
+            <div className="col-12 col-lg-12 text-center" style={{}}>
               <h4>Details Added By {videoAddedToWebAppBy} </h4>
             </div>
             <div className="col-12 col-lg-10">
@@ -193,7 +225,7 @@ function VideoDetailsDisplay() {
                   </div>
                 )}
                 <div className="col-lg-4 col-sm-12 text-center">
-                  <h4>Ratings</h4>
+                  <h4>Ratings :</h4>
                 </div>
                 <div className="col-lg-8 col-sm-12 text-md">
                   <ReactStars
@@ -207,13 +239,18 @@ function VideoDetailsDisplay() {
                   <h4>Category</h4>
                 </div>
                 <div className="col-lg-8 col-sm-12 text-md">
-                  <h4>{videoCategory}</h4>
+                  <h4>
+                    {videoCategory[0].toUpperCase() +
+                      videoCategory.substring(1)}
+                  </h4>
                 </div>
                 <div className="col-lg-4 col-sm-12 text-center">
                   <h4>Topic</h4>
                 </div>
                 <div className="col-lg-8 col-sm-12 text-md">
-                  <h4>{videoTopic}</h4>
+                  <h4>
+                    {videoTopic[0].toUpperCase() + videoTopic.substring(1)}
+                  </h4>
                 </div>
               </div>
             </div>
@@ -273,8 +310,27 @@ function VideoDetailsDisplay() {
             </div>
           </div>
         </div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      {isPageLoading ? (
+        <LoadingAnimation />
+      ) : (
+        <>
+          <Navbar login={{ isUserLoggedIn }} />
+          <div
+            className="container-fluid containerUser"
+            style={{ minHeight: "100vh" }}
+          >
+            {detailsContainer()}
+          </div>
+          <Footer />
+        </>
       )}
-    </div>
+    </>
   );
 }
 
