@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Rating as ReactStars } from "react-simple-star-rating";
 import "../App.css";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 /*
  * To change the url to fetch videoID from params .
@@ -12,9 +13,10 @@ import axios from "axios";
 function VideoDetailsDisplay() {
   const [loggedInUser, setLoggedInUser] = useState("TestUser");
 
+  let { videoID } = useParams();
+
   // USE STATE HOOK
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const [videoID, setVideoID] = useState("");
   const [videoURL, setVideoURL] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
   const [videoUploadedBy, setVideoUploadedBy] = useState("");
@@ -38,9 +40,8 @@ function VideoDetailsDisplay() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/v1/video/getvideo/K1iu1kXkVoA`)
+      .get(`http://localhost:8000/api/v1/video/getvideo/${videoID}`)
       .then((response) => {
-        setVideoID(response.data.videoID);
         setVideoURL(response.data.videoURL);
         setVideoTitle(response.data.videoTitle);
         setVideoUploadedBy(response.data.videoUploadedBy);
