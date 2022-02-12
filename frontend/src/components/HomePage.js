@@ -99,7 +99,7 @@ function HomePage() {
                 style={{
                   border: "2px solid #800000",
                   color: "wheat",
-                  width: "25%",
+                  width: "auto",
                 }}
                 onClick={() => {
                   navigate("/search");

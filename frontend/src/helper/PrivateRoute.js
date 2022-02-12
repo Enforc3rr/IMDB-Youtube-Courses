@@ -1,11 +1,10 @@
 import { useContext } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { LoginContext } from "./LoginContext";
 
-function PrivateRoute() {
-  const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
-
-  return isUserLoggedIn ? <Outlet /> : <Navigate to="/" />;
+export default function PrivateRoute(props) {
+  const { isUserLoggedIn, doneloading } = useContext(LoginContext);
+  if (!isUserLoggedIn && doneloading) return <Navigate to="/signin" />;
+  if (doneloading) return props.children;
+  return null;
 }
-
-export default PrivateRoute;
