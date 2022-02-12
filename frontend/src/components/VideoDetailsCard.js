@@ -10,6 +10,7 @@ function VideoDetailsCard(props) {
   const [topic, setTopic] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [videoLink, setVideoLink] = useState("");
+  const [videoDetailsPage, setVideoDetailsPage] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -20,6 +21,7 @@ function VideoDetailsCard(props) {
       setVideoLink(`https://www.youtube.com/watch?v=${props.data.videoID}`);
       setTopic(props.data.videoTopic);
       setIsPageLoading(false);
+      setVideoDetailsPage(`http://localhost:3000/vd/${props.data.videoID}`);
     }, 1000);
   }, []);
 
@@ -101,7 +103,7 @@ function VideoDetailsCard(props) {
             <button
               type="button"
               onClick={() => {
-                window.open(videoLink);
+                window.open(videoDetailsPage);
               }}
               className="videoDetailsCardButton"
             >
