@@ -140,3 +140,19 @@ a :hover {
     width: 80%;
   }
 }
+
+.searchInput {
+  border-color: #800;
+  margin: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: black;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.searchInput:focus {
+  outline: none !important;
+  border: 2px solid #800;
+  box-shadow: 0 0 5px red;
+  background-color: rgba(255, 255, 255, 0);
+}
