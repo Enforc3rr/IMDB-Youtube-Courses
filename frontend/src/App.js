@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  BrowserRouter,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
@@ -12,13 +18,20 @@ import PrivateRoute from "./helper/PrivateRoute";
 
 function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [doneloading, setDoneLoading] = useState(false);
+
+  const isUserPresent = async () => {
+    const getUserStatus = localStorage.getItem("tokenYoutubeIMDB");
+    console.log(getUserStatus);
+    getUserStatus ? setIsUserLoggedIn(true) : setIsUserLoggedIn(false);
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      localStorage.getItem("tokenYoutubeIMDB")
-        ? setIsUserLoggedIn(true)
-        : setIsUserLoggedIn(false);
-    }, 1000);
+    const fetchUser = async () => {
+      await isUserPresent();
+      setDoneLoading(true);
+    };
+    fetchUser();
   }, []);
 
   useEffect(() => {
@@ -31,6 +44,7 @@ function App() {
         <Routes>
           {isUserLoggedIn && (
             <>
+              <Route path="/logout" element={<Logout />} />
               <Route path="/login" element={<Navigate to="/" />} />
               <Route path="/signup" element={<Navigate to="/" />} />
             </>
