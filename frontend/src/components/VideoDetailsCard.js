@@ -20,8 +20,8 @@ function VideoDetailsCard(props) {
       setTotalRating(props.data.videoRating);
       setVideoLink(`https://www.youtube.com/watch?v=${props.data.videoID}`);
       setTopic(props.data.videoTopic);
-      setIsPageLoading(false);
       setVideoDetailsPage(`http://localhost:3000/vd/${props.data.videoID}`);
+      setIsPageLoading(false);
     }, 1000);
   }, []);
 
