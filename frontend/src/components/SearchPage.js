@@ -14,7 +14,6 @@ function SearchPage() {
   const [topic, setTopic] = useState("");
   const [rating, setRating] = useState(0);
   const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
-  const [usernameOfLoggedInUser, setUsernameOfLoggedInUser] = useState("");
   const ratingsArray = useRef([0, 1, 2, 3, 4, 5]);
 
   useEffect(() => {
@@ -30,7 +29,7 @@ function SearchPage() {
   const onSearchHandle = () => {
     let url;
     if (search !== "" && rating !== 0 && topic !== 0) {
-      url = `http://localhost:8000/api/v1/video/fetchquery?title=${search}&rating=${rating}&topic=${topic}`;
+      url = `https://youtube-courses-imdb.herokuapp.com/api/v1/video/fetchquery?title=${search}&rating=${rating}&topic=${topic}`;
     } else if (search !== "" && rating !== 0 && topic === "") {
       url = `http://localhost:8000/api/v1/video/fetchquery?title=${search}&rating=${rating}`;
     } else if (search !== "" && topic === "" && rating === 0) {
