@@ -1,14 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Rating as ReactStars } from "react-simple-star-rating";
 import "../App.css";
-import axios from "axios";
+
 import { useParams } from "react-router-dom";
 import LoadingAnimation from "./LoadingAnimation";
 import { LoginContext } from "../helper/LoginContext";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/youtube";
 import Axios from "axios";
+import Swal from "sweetalert2";
 
 /*
  * To change the url to fetch videoID from params . [done]
@@ -46,8 +47,9 @@ function VideoDetailsDisplay() {
   // USE EFFECT HOOK
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/v1/video/getvideo/${videoID}`)
+    Axios.get(
+      `https://youtube-courses-imdb.herokuapp.com/api/v1/video/getvideo/${videoID}`
+    )
       .then((response) => {
         setVideoURL(response.data.videoURL);
         setVideoTitle(response.data.videoTitle);
@@ -61,33 +63,30 @@ function VideoDetailsDisplay() {
         });
         setVideoAddedToWebAppBy(response.data.videoAddedToWebAppBy);
 
-        if (
-          isUserLoggedIn &&
-          JSON.stringify(localStorage.getItem("tokenYoutubeIMDB"))
-        ) {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem(
-                "tokenYoutubeIMDB"
-              )}`,
-            },
-          };
-          Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
-            .then((res) => {
-              setLoggedInUser(res.data.username);
-            })
-            .catch((error) => {
-              console.log(error);
-              setIsUserLoggedIn(false);
-            });
-        }
         setIsPageLoading(false);
       })
       .catch((error) => {
-        //To Add No VideoID found error message/page
-        console.log(error);
+        console.log(error.response);
       });
   }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("tokenYoutubeIMDB") && isUserLoggedIn) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
+        },
+      };
+      Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+        .then((res) => {
+          setLoggedInUser(res.data.username);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsUserLoggedIn(false);
+        });
+    }
+  }, [isUserLoggedIn]);
 
   useEffect(() => {
     if (ratingsReceivedGotMounted.current) {
@@ -142,17 +141,55 @@ function VideoDetailsDisplay() {
       userRatingGotMounted.current = true;
     }
   }, [userRating]);
-  /*
-  <div className="col-12 col-lg-12 text-center">
-              <a href={videoURL}>
-                <img className="img-fluid" src={videoThumbnail} alt="" />
-              </a>
-            </div>
-  */
 
   // Functions
   const setUserRatingFunction = (ratingValue) => {
     setRating(ratingValue);
+  };
+  const rateDisplay = () => {
+    return (
+      <>
+        {hasUserRatedThisBefore ? (
+          <div className="row" style={{ width: "100%", margin: "auto" }}>
+            <div className="col-lg-4 col-sm-12 text-center">
+              <h4>Your Rating</h4>
+            </div>
+            <div className="col-lg-8 col-sm-12 text-md">
+              <ReactStars
+                size={"25px"}
+                readonly={true}
+                initialValue={userRating}
+                transition={true}
+              />
+            </div>
+          </div>
+        ) : (
+          <div
+            className="row"
+            style={{
+              width: "100%",
+              margin: "auto",
+            }}
+          >
+            <div className="col-lg-4 col-sm-12 col-md-4 text-center">
+              <h4>Rate :</h4>
+            </div>
+            <div className="col-lg-8 col-md-8 col-sm-12 text-md">
+              <ReactStars
+                count={5}
+                ratingValue={rating}
+                size={"25px"}
+                onClick={setUserRatingFunction}
+                allowHover={true}
+                allowHalfIcon={true}
+                transition={true}
+                activeColor="#ffd700"
+              />
+            </div>
+          </div>
+        )}
+      </>
+    );
   };
   const detailsContainer = () => {
     return (
@@ -163,7 +200,7 @@ function VideoDetailsDisplay() {
         >
           <div className="row">
             <div className="col-12 col-lg-12 d-flex justify-content-center mb-4">
-              <ReactPlayer url={videoURL} light={true} />
+              <ReactPlayer url={videoURL} light={true} controls={true} />
             </div>
             <div
               className="col-12 col-lg-12 text-center"
@@ -175,54 +212,39 @@ function VideoDetailsDisplay() {
               <h1>{videoTitle}</h1>
             </div>
             <div className="col-12 col-lg-12 text-center">
-              <h2>By {videoUploadedBy}</h2>
+              <h2>
+                By{" "}
+                <u style={{ textDecorationColor: "#800" }}>{videoUploadedBy}</u>
+              </h2>
             </div>
-            <div className="col-12 col-lg-12 text-center" style={{}}>
-              <h4>Details Added By {videoAddedToWebAppBy} </h4>
+            <div className="col-12 col-lg-12 text-center">
+              <h5>
+                Details Added By{" "}
+                <u style={{ textDecorationColor: "#800" }}>
+                  {videoAddedToWebAppBy}
+                </u>
+              </h5>
             </div>
-            <div className="col-12 col-lg-10">
+            <div className="col-12 col-lg-10 mt-5">
               <div className="row">
-                {hasUserRatedThisBefore ? (
-                  <div
-                    className="row"
-                    style={{ width: "100%", margin: "auto" }}
-                  >
-                    <div className="col-lg-4 col-sm-12 text-center">
-                      <h4>Your Rating</h4>
-                    </div>
-                    <div className="col-lg-8 col-sm-12 text-md">
-                      <ReactStars
-                        size={"25px"}
-                        readonly={true}
-                        initialValue={userRating}
-                        transition={true}
-                      />
-                    </div>
-                  </div>
+                {isUserLoggedIn ? (
+                  rateDisplay()
                 ) : (
-                  <div
-                    className="row"
-                    style={{
-                      width: "100%",
-                      margin: "auto",
-                    }}
-                  >
-                    <div className="col-lg-4 col-sm-12 col-md-4 text-center">
+                  <>
+                    <div className="col-lg-4 col-sm-12 text-center">
+                      {" "}
                       <h4>Rate :</h4>
                     </div>
-                    <div className="col-lg-8 col-md-8 col-sm-12 text-md">
-                      <ReactStars
-                        count={5}
-                        ratingValue={rating}
-                        size={"25px"}
-                        onClick={setUserRatingFunction}
-                        allowHover={true}
-                        allowHalfIcon={true}
-                        transition={true}
-                        activeColor="#ffd700"
-                      />
+                    <div className="col-lg-8 col-sm-12">
+                      {" "}
+                      <h4>
+                        <a href="/login" className="text-danger">
+                          Login
+                        </a>{" "}
+                        To Rate The Video
+                      </h4>
                     </div>
-                  </div>
+                  </>
                 )}
                 <div className="col-lg-4 col-sm-12 text-center">
                   <h4>Ratings :</h4>
@@ -254,7 +276,7 @@ function VideoDetailsDisplay() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-2 col-12">
+            <div className="col-lg-2 col-12 mt-5">
               <div className="row" style={{ border: "2px solid black" }}>
                 <table style={{ width: "100%", textAlign: "center" }}>
                   <thead>

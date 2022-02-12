@@ -15,6 +15,7 @@ import SearchPage from "./components/SearchPage";
 import SignupPage from "./components/SignupPage";
 import { LoginContext } from "./helper/LoginContext";
 import PrivateRoute from "./helper/PrivateRoute";
+import UserProfile from "./components/UserProfile";
 
 function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -55,6 +56,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/logout" element={<Navigate to="/login" />} />
           <Route path="/vd/:videoID" element={<VideoDetailsDisplay />} />
+          <Route path="/u/:username" element={<UserProfile />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </LoginContext.Provider>
