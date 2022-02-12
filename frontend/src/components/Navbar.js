@@ -1,12 +1,15 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 
+//Passing user details in Navbar as a prop
+
 function Navbar(props) {
   const [usernameOfLoggedInUser, setUsernameOfLoggedInUser] = useState("");
+
   useEffect(() => {
     if (
       props.login.isUserLoggedIn &&
-      JSON.stringify(localStorage.getItem("tokenYoutubeIMDB"))
+      localStorage.getItem("tokenYoutubeIMDB")
     ) {
       const config = {
         headers: {
@@ -23,6 +26,7 @@ function Navbar(props) {
         });
     }
   });
+
   return (
     <>
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -59,37 +63,64 @@ function Navbar(props) {
         </button>
         <div className="collapse navbar-collapse" id="navbarToggler">
           <a href="/">
-            <span className="navbar-brand" style={{ color: "beige" }}>
+            <span
+              style={{
+                color: "beige",
+                fontSize: "1.5em",
+                fontWeight: "bold",
+                textDecoration: "underline",
+                textDecorationColor: "#800",
+                textDecorationWidth: "100px",
+              }}
+            >
               YoutubeCourseIMDB
             </span>
           </a>
-          <a href="/" className="ml-5">
-            <span className="navbar-brand" style={{ color: "beige" }}>
+          <a href="/search" className="ml-5">
+            <span
+              style={{
+                color: "beige",
+                fontSize: "1.2em",
+                fontWeight: "normal",
+              }}
+            >
               Search
             </span>
           </a>
           <div className="ml-auto">
             {!props.login.isUserLoggedIn ? (
               <div>
-                <a href="/" className="mx-auto mr-5">
+                <a href="/login" className="mx-auto mr-5">
                   <span
                     className="navbar-brand"
-                    style={{ border: "1px solid white", color: "beige" }}
+                    style={{
+                      border: "1px solid red",
+                      padding: "5px",
+                      color: "beige",
+                      borderRadius: "1em",
+                      fontSize: "1em",
+                    }}
                   >
                     Login
                   </span>
                 </a>
-                <a href="/" className="mx-auto ml-5">
+                <a href="/signup" className="mx-auto ml-5">
                   <span
                     className="navbar-brand"
-                    style={{ border: "1px solid white", color: "beige" }}
+                    style={{
+                      border: "1px solid red",
+                      padding: "5px",
+                      color: "beige",
+                      borderRadius: "1em",
+                      fontSize: "1em",
+                    }}
                   >
                     Signup
                   </span>
                 </a>
               </div>
             ) : (
-              <a href={`/profile/${usernameOfLoggedInUser}`}>
+              <a href={`/u/${usernameOfLoggedInUser}`}>
                 <span
                   style={{
                     color: "beige",
