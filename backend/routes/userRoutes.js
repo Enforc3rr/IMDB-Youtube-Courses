@@ -8,6 +8,8 @@ router.route("/userlogin")
     .post(userLogin);
 router.route("/userdetails")
     .get(verifyJWT,userDetails);
+router.route("/user/:username")
+    .get();
 
 router.route("/test")
     .get(verifyJWT , (req,res)=>{

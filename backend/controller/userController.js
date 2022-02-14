@@ -19,6 +19,11 @@ exports.userDetails = async (req,res)=>{
     }
 }
 
+exports.userData = async (req,res)=>{
+    const user = await userDatabase.findOne({username : req.params.username});
+    return res.status(200).json(user);
+}
+
 
 exports.userSignup = async (req,res)=>{
     const salt = await bcrypt.genSalt(10);
