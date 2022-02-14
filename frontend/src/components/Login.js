@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import "../App.css";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import LoadingAnimation from "./LoadingAnimation";
 import { LoginContext } from "../helper/LoginContext";
 import { useNavigate } from "react-router-dom";
 
@@ -20,19 +21,6 @@ function Login() {
     setIsPageLoading(false);
   }, []);
 
-  const loadingPage = () => {
-    return (
-      <div
-        className="container-fluid d-flex justify-content-center align-items-center"
-        style={{ height: "100vh" }}
-      >
-        <div
-          className="spinner-grow"
-          style={{ width: "30vh", height: "30vh" }}
-        ></div>
-      </div>
-    );
-  };
   const dataToBeSent = {
     username,
     password,
@@ -140,7 +128,7 @@ function Login() {
     );
   };
 
-  return <>{isPageLoading ? loadingPage() : login()}</>;
+  return <>{isPageLoading ? <LoadingAnimation /> : login()}</>;
 }
 
 export default Login;
