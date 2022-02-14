@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Routes,
-  Route,
-  BrowserRouter,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
@@ -23,7 +17,6 @@ function App() {
 
   const isUserPresent = async () => {
     const getUserStatus = localStorage.getItem("tokenYoutubeIMDB");
-    console.log(getUserStatus);
     getUserStatus ? setIsUserLoggedIn(true) : setIsUserLoggedIn(false);
   };
 
@@ -35,26 +28,39 @@ function App() {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    console.log("logged in state changed " + isUserLoggedIn);
-  }, [isUserLoggedIn]);
-
   return (
     <BrowserRouter>
-      <LoginContext.Provider value={{ isUserLoggedIn, setIsUserLoggedIn }}>
+      <LoginContext.Provider
+        value={{ isUserLoggedIn, setIsUserLoggedIn, doneloading }}
+      >
         <Routes>
-          {isUserLoggedIn && (
-            <>
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/login" element={<Navigate to="/" />} />
-              <Route path="/signup" element={<Navigate to="/" />} />
-            </>
-          )}
+          <Route
+            path="/login"
+            element={
+              <PrivateRoute reversed to="/">
+                <Login />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PrivateRoute reversed to="/">
+                <SignupPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/logout"
+            element={
+              <PrivateRoute to="/login">
+                <Logout />
+              </PrivateRoute>
+            }
+          />
+
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/logout" element={<Navigate to="/login" />} />
           <Route path="/vd/:videoID" element={<VideoDetailsDisplay />} />
           <Route path="/u/:username" element={<UserProfile />} />
           <Route path="*" element={<ErrorPage />} />
