@@ -10,6 +10,7 @@ import Footer from "./Footer";
 import ReactPlayer from "react-player/youtube";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import { URL } from "./Data.js";
 
 /*
  * To change the url to fetch videoID from params . [done]
@@ -66,7 +67,7 @@ function VideoDetailsDisplay() {
         setIsPageLoading(false);
       })
       .catch((error) => {
-        console.log(error.response);
+        console.log(error);
       });
   }, []);
 
@@ -91,24 +92,40 @@ function VideoDetailsDisplay() {
   useEffect(() => {
     if (ratingsReceivedGotMounted.current) {
       if (ratingsReceived.length !== 0 && usersRatingData.length < 3) {
-        for (
-          let i = ratingsReceived.length - 3;
-          i < ratingsReceived.length;
-          i++
-        ) {
+        if (ratingsReceived.length === 1) {
           setUsersRatingData((oldValue) => {
-            return [...oldValue, ratingsReceived[i]];
+            return [...oldValue, ratingsReceived[0]];
           });
+        } else if (ratingsReceived.length === 2) {
+          for (
+            let i = ratingsReceived.length - 1;
+            i >= ratingsReceived.length - 2;
+            i--
+          ) {
+            setUsersRatingData((oldValue) => {
+              return [...oldValue, ratingsReceived[i]];
+            });
+          }
+        } else {
+          for (
+            let i = ratingsReceived.length - 4;
+            i >= ratingsReceived.length - 1;
+            i--
+          ) {
+            setUsersRatingData((oldValue) => {
+              return [...oldValue, ratingsReceived[i]];
+            });
+          }
         }
-      }
 
-      const userTempRating = ratingsReceived.filter((value) => {
-        return value.ratingsReceivedBy === loggedInUser;
-      });
+        const userTempRating = ratingsReceived.filter((value) => {
+          return value.ratingsReceivedBy === loggedInUser;
+        });
 
-      if (userTempRating.length !== 0) {
-        setHasUserRatedThisBefore(true);
-        setUserRating(userTempRating[0].ratingValue);
+        if (userTempRating.length !== 0) {
+          setHasUserRatedThisBefore(true);
+          setUserRating(userTempRating[0].ratingValue);
+        }
       }
     } else {
       ratingsReceivedGotMounted.current = true;
@@ -131,11 +148,36 @@ function VideoDetailsDisplay() {
           ratingsReceivedBy: loggedInUser,
           ratingValue: userRating,
         };
-        //sending data to server .
-        setUsersRatingData((oldValue) => {
-          oldValue.shift();
-          return [...oldValue, tempUserData];
-        });
+
+        if (usersRatingData.length <= 2) {
+          setUsersRatingData((oldValue) => {
+            return [...oldValue, tempUserData];
+          });
+        } else {
+          setUsersRatingData((oldValue) => {
+            oldValue.shift();
+            return [...oldValue, tempUserData];
+          });
+        }
+
+        tempUserData["videoID"] = videoID;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
+          },
+        };
+        Axios.post(`${URL}/api/v1/video/ratings`, tempUserData, config).then(
+          (res) => {
+            Swal.fire(
+              {
+                icon: "success",
+                title: "Yay..!",
+                text: "Your Rating Has Been Added",
+              },
+              1500
+            );
+          }
+        );
       }
     } else {
       userRatingGotMounted.current = true;
@@ -143,6 +185,7 @@ function VideoDetailsDisplay() {
   }, [userRating]);
 
   // Functions
+
   const setUserRatingFunction = (ratingValue) => {
     setRating(ratingValue);
   };
@@ -220,9 +263,14 @@ function VideoDetailsDisplay() {
             <div className="col-12 col-lg-12 text-center">
               <h5>
                 Details Added By{" "}
-                <u style={{ textDecorationColor: "#800" }}>
-                  {videoAddedToWebAppBy}
-                </u>
+                <a
+                  href={`/u/${videoAddedToWebAppBy}`}
+                  style={{ color: "beige" }}
+                >
+                  <u style={{ textDecorationColor: "#800" }}>
+                    {videoAddedToWebAppBy}
+                  </u>
+                </a>
               </h5>
             </div>
             <div className="col-12 col-lg-10 mt-5">
