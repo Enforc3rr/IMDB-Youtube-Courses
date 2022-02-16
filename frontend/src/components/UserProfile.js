@@ -1,17 +1,22 @@
 import Axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../helper/LoginContext";
+import { URL } from "./Data";
 import "../App.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Swal from "sweetalert2";
+import VideoDetailsDisplayCardForUserProfile from "./VideoDetailsDisplayCardForUserProfile";
 
 function UserProfile() {
   const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
   const [loggedInUser, setLoggedInUser] = useState("");
+  const [videosAddedByUser, setVideosAddedByUser] = useState([]);
+  const [videosRatedByUser, setVideosRatedByUser] = useState([]);
+  const [profileOwner, setProfileOwner] = useState(false);
   let { username } = useParams();
-
-  const [user, setUser] = useState(username);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("tokenYoutubeIMDB") && isUserLoggedIn) {
@@ -29,7 +34,21 @@ function UserProfile() {
           setIsUserLoggedIn(false);
         });
     }
-  }, [isUserLoggedIn]);
+
+    Axios.get(`${URL}/api/v1/user/${username}`)
+      .then((res) => {
+        setVideosAddedByUser((prevVids) => {
+          return res.data.coursesAdded;
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire("No Such User Exists");
+      });
+    if (username === loggedInUser) {
+      setProfileOwner(true);
+    }
+  }, []);
 
   return (
     <>
@@ -54,15 +73,57 @@ function UserProfile() {
               >
                 {username}
               </h1>
-              <button className="btn btn-outline-danger mt-1">Logout</button>
+              {profileOwner ? (
+                <>
+                  <button
+                    className="btn btn-outline-danger mt-1"
+                    onClick={() => {
+                      navigate("/videoadd");
+                    }}
+                  >
+                    Add Video
+                  </button>
+                  <button
+                    className="btn btn-outline-danger mt-1"
+                    onClick={() => {
+                      navigate("/logout");
+                    }}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : null}
             </div>
+
             <div className="col-sm-12 col-lg-12 col-md-12">
               <div className="row">
                 <div className="col-sm-12 col-lg-12 col-md-12 text-center">
-                  <h3 className="mt-1 mb-4" style={{ color: "beige" }}>
-                    Last Three Posts
+                  <h3
+                    className="mt-1 mb-4"
+                    style={{
+                      color: "beige",
+                      textDecoration: "underline",
+                      textDecorationColor: "#800",
+                    }}
+                  >
+                    Last Three Video Details Added
                   </h3>
                 </div>
+                {videosAddedByUser
+                  .slice(
+                    videosAddedByUser.length - 4,
+                    videosAddedByUser.length - 1
+                  )
+                  .map((value) => {
+                    return (
+                      <div className="col-md-6 col-lg-4 col-sm-12">
+                        (
+                        <VideoDetailsDisplayCardForUserProfile
+                          videoID={value.videoID}
+                        />
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>
