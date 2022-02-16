@@ -1,10 +1,12 @@
 const videoDatabase = require("../models/videoModel");
+const userDatabase = require("../models/userModel");
 const moment = require("moment");
 const axios = require("axios");
 const videoAdditionDate = `${moment().format("DD/MM/YYYY").split("/")[0]}-${moment().format("DD/MM/YYYY").split("/")[1]}-${moment().format("DD/MM/YYYY").split("/")[2]}`;
 
 exports.addVideo = async (req,res)=>{
     let videoID ;
+
     if(req.body.videoURL.split("watch?v=")[1]){ // put this code on front end as well so that we don't get any other link.
        videoID = req.body.videoURL.split("watch?v=")[1].split("&")[0];
     }
@@ -21,12 +23,19 @@ exports.addVideo = async (req,res)=>{
         videoTopic : req.body.videoTopic.toLowerCase() ,
         videoDescription : req.body.videoDescription ,
         videoLanguage : req.body.videoLanguage.toLowerCase() ,
-        videoAddedToWebAppBy : req.user,
+        videoAddedToWebAppBy : req.body.videoAddedToWebAppBy,
         videoAddedToWebApp : videoAdditionDate
     }
     try{
-        await videoDatabase.create(video)
+        const user = await userDatabase.findById(req.user);
+        const data = {
+            videoID , addedOn : Date.now()
+        }
+        user.coursesAdded.push(data);
+        await userDatabase.findOneAndUpdate({_id: req.user},user);
+        await videoDatabase.create(video);
     }catch (e){
+        console.log(e);
         return res.status(400).json({
             videoDataAdded : false ,
             errorCode : "duplication",
@@ -45,6 +54,7 @@ exports.changeRatings= async (req,res)=>{
         ratingsReceivedBy : req.body.ratingsReceivedBy,
         ratingValue : req.body.ratingValue
     }
+
     videoRatingToBeChanged.ratingsReceived.push(userChangingRatingDetail);
     let rating = 0;
     videoRatingToBeChanged.ratingsReceived.forEach(data=>{
@@ -121,7 +131,7 @@ exports.fetchViaQueries = async (req,res)=>{
     }else if(!req.query.title && !req.query.rating && req.query.topic){
         const data = await videoDatabase.find({
             videoTopic : {
-                "$regex":req.query.topic
+                "$regex":req.query.topic,"$options":"i"
             }
         });
         return res.status(200).json(data);
@@ -131,7 +141,7 @@ exports.fetchViaQueries = async (req,res)=>{
                 "$gte":req.query.rating
             },
             videoTopic : {
-                "$regex":req.query.topic
+                "$regex":req.query.topic,"$options":"i"
             }
         });
         return res.status(200).json(data);
