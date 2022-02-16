@@ -1,31 +1,40 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { langArray, categories } from "./Data";
+import Axios from "axios";
+import { useState, useEffect, useContext } from "react";
+import { langArray, categories, URL } from "./Data";
+import { LoginContext } from "../helper/LoginContext";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import LoadingAnimation from "./LoadingAnimation";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 function VideoDetailsForm(props) {
   const [category, setCategory] = useState();
-  const [topic, setTopic] = useState();
-  const [description, setDescription] = useState();
+  const [topic, setTopic] = useState("");
+  const [description, setDescription] = useState("");
   const [language, setLanguage] = useState();
-  const [thumbnail, setThumbnail] = useState();
-  const [title, setTitle] = useState();
-  const [uploadedBy, setUploadedBy] = useState();
+  const [thumbnail, setThumbnail] = useState("");
+  const [title, setTitle] = useState("");
+  const [uploadedBy, setUploadedBy] = useState("");
   const [videoTopicPropertyName, setVideoTopicPropertyName] =
     useState("Video Topic");
   const videoID = props.videoUrl.split("watch?v=")[1].split("&")[0];
   const [loadingDetailsForm, setLoadingDetailsForm] = useState(true);
+  const [displayResponse, setDisplayResponse] = useState(false);
+  const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
+  let navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/v1/video/youtubeinfo?vid=${videoID}`)
+    Axios.get(`${URL}/api/v1/video/youtubeinfo?vid=${videoID}`)
       .then((response) => {
-        setLoadingDetailsForm(false);
         setThumbnail(response.data.youtubeInfo.videoThumbnailURL);
         setTitle(response.data.youtubeInfo.videoTitle);
         setUploadedBy(response.data.youtubeInfo.videoUploadedBy);
+        setLoadingDetailsForm(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoadingDetailsForm(false);
       });
   }, []);
 
@@ -35,28 +44,67 @@ function VideoDetailsForm(props) {
   }, [category]);
 
   const submitData = () => {
-    // TO add check to not leave value of category and langauge at 0.
+    setLoadingDetailsForm(true);
+
     const data = {
+      videoURL: props.videoUrl,
       videoCategory: categories[category],
       videoTopic: topic,
       videoDescription: description,
-      language: langArray[language],
+      videoLanguage: langArray[language],
+      videoAddedToWebAppBy: props.user,
     };
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
+      },
+    };
+    Axios.post(`${URL}/api/v1/video/addvideo`, data, config)
+      .then((res) => {
+        setLoadingDetailsForm(false);
+        setDisplayResponse(true);
+        setTimeout(() => {
+          navigate(`/vd/${videoID}`);
+        }, 1500);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setLoadingDetailsForm(false);
+
+        if (!err.response.data.videoDataAdded) {
+          navigate("/videocheck");
+          //Will Change this later
+          Swal.fire({ title: "Duplication", timer: "2000" });
+        } else if (err.response.data.errorCode === "INVALID_TOKEN") {
+          setIsUserLoggedIn(false);
+          navigate("/");
+        } else {
+          Swal.fire({ title: "Some Error Occured", timer: "2000" });
+        }
+      });
   };
-  return (
-    <div>
-      {loadingDetailsForm ? (
+  const response = () => {
+    return (
+      <>
         <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ width: "100wv", height: "100vh" }}
+          className="container d-flex justify-content-center align-items-center flex-column shadow-lg"
+          style={{ minHeight: "100vh ", color: "beige" }}
         >
-          <div
-            className="spinner-grow"
-            style={{ width: "40vh", height: "40vh" }}
-          ></div>
+          <h1 className="display-4" style={{ textDecorationColor: "#800" }}>
+            <u>Your Video Has Been Successfully Added</u>
+          </h1>
+          <h2>Redirecting... </h2>
         </div>
-      ) : (
-        <div className="container d-flex justify-content-center align-items-center shadow-lg ">
+      </>
+    );
+  };
+  const form = () => {
+    return (
+      <>
+        <div
+          className="container d-flex justify-content-center align-items-center shadow-lg "
+          style={{ color: "beige" }}
+        >
           <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-12 text-center">
               <img src={thumbnail} alt="#" className="img-fluid p-3" />
@@ -156,8 +204,19 @@ function VideoDetailsForm(props) {
             </div>
           </div>
         </div>
+      </>
+    );
+  };
+  return (
+    <>
+      {loadingDetailsForm ? (
+        <LoadingAnimation />
+      ) : (
+        <>
+          {!displayResponse ? form() : response()} <Footer />
+        </>
       )}
-    </div>
+    </>
   );
 }
 
