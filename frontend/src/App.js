@@ -10,6 +10,7 @@ import SignupPage from "./components/SignupPage";
 import { LoginContext } from "./helper/LoginContext";
 import PrivateRoute from "./helper/PrivateRoute";
 import UserProfile from "./components/UserProfile";
+import VideoAvailabilityCheck from "./components/VideoAvailabilityCheck";
 
 function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -55,6 +56,14 @@ function App() {
             element={
               <PrivateRoute to="/login">
                 <Logout />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/videoadd"
+            element={
+              <PrivateRoute to="/login">
+                <VideoAvailabilityCheck />
               </PrivateRoute>
             }
           />
