@@ -7,7 +7,7 @@ export const langArray = [
   "Hindi",
   "Japanese",
   "Korean",
-  "Others",
+  "Other",
   "Portuguese",
   "Russian",
   "Spanish",
@@ -32,3 +32,6 @@ export const userRatingsDemo = [
   { ratingReceivedBy: "C", ratingValue: 5 },
   { ratingReceivedBy: "D", ratingValue: 5 },
 ];
+
+// I know using an env variable is a better choice than this....!!
+export const URL = "http://localhost:8000";
