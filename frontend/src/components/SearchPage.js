@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { LoginContext } from "../helper/LoginContext";
 import { useContext } from "react";
+import { URL } from "./Data";
 
 function SearchPage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -29,17 +30,17 @@ function SearchPage() {
   const onSearchHandle = () => {
     let url;
     if (search !== "" && rating !== 0 && topic !== 0) {
-      url = `https://youtube-courses-imdb.herokuapp.com/api/v1/video/fetchquery?title=${search}&rating=${rating}&topic=${topic}`;
+      url = `${URL}/api/v1/video/fetchquery?title=${search}&rating=${rating}&topic=${topic}`;
     } else if (search !== "" && rating !== 0 && topic === "") {
-      url = `http://localhost:8000/api/v1/video/fetchquery?title=${search}&rating=${rating}`;
+      url = `${URL}/api/v1/video/fetchquery?title=${search}&rating=${rating}`;
     } else if (search !== "" && topic === "" && rating === 0) {
-      url = `http://localhost:8000/api/v1/video/fetchquery?title=${search}`;
+      url = `${URL}/api/v1/video/fetchquery?title=${search}`;
     } else if (search !== "" && topic !== "" && rating === 0) {
-      url = `http://localhost:8000/api/v1/video/fetchquery?title=${search}&topic=${topic}`;
+      url = `${URL}/api/v1/video/fetchquery?title=${search}&topic=${topic}`;
     } else if (search === "" && topic !== "" && rating === 0) {
-      url = `http://localhost:8000/api/v1/video/fetchquery?topic=${topic}`;
+      url = `${URL}/api/v1/video/fetchquery?topic=${topic}`;
     } else if (search !== "" && topic !== "" && rating !== 0) {
-      url = `http://localhost:8000/api/v1/video/fetchquery?title=${search}&topic=${topic}`;
+      url = `${URL}/api/v1/video/fetchquery?title=${search}&topic=${topic}`;
     }
 
     if (search === "" && topic === "") {
@@ -81,10 +82,8 @@ function SearchPage() {
                   fontSize: "5vh",
                   fontWeight: "bold",
                   borderRadius: "10px",
-                  outline: "none",
-                  borderBlock: "0px",
-                  border: "0px",
                 }}
+                className="searchInput"
                 onKeyDown={addViaEnter}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -103,7 +102,9 @@ function SearchPage() {
                       height: "50%",
                       fontSize: "3vh",
                       fontWeight: "bold",
+                      borderRadius: "5px",
                     }}
+                    className="searchInput"
                     onKeyDown={addViaEnter}
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
