@@ -14,9 +14,9 @@ import { URL } from "./Data.js";
 
 /*
  * To change the url to fetch videoID from params . [done]
- * Adding Ratings data to the server. [will do it after fixing "/logout" bug]
- * To Add certains animations etc in the UI .
- * Add Channel Link and Details Added By User(his profile Link).
+ * Adding Ratings data to the server. [will do it after fixing "/logout" bug] [done]
+ * To Add certains animations etc in the UI . [won't do it ]
+ * Add Channel Link and Details Added By User(his profile Link). [added react player and did the later part]
  */
 function VideoDetailsDisplay() {
   const [loggedInUser, setLoggedInUser] = useState("");
@@ -48,9 +48,7 @@ function VideoDetailsDisplay() {
   // USE EFFECT HOOK
 
   useEffect(() => {
-    Axios.get(
-      `https://youtube-courses-imdb.herokuapp.com/api/v1/video/getvideo/${videoID}`
-    )
+    Axios.get(`${URL}/api/v1/video/getvideo/${videoID}`)
       .then((response) => {
         setVideoURL(response.data.videoURL);
         setVideoTitle(response.data.videoTitle);
@@ -78,7 +76,7 @@ function VideoDetailsDisplay() {
           Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
         },
       };
-      Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+      Axios.get(`${URL}/api/v1/user/userdetails`, config)
         .then((res) => {
           setLoggedInUser(res.data.username);
         })
@@ -108,8 +106,8 @@ function VideoDetailsDisplay() {
           }
         } else {
           for (
-            let i = ratingsReceived.length - 4;
-            i >= ratingsReceived.length - 1;
+            let i = ratingsReceived.length - 1;
+            i >= ratingsReceived.length - 3;
             i--
           ) {
             setUsersRatingData((oldValue) => {
@@ -283,13 +281,13 @@ function VideoDetailsDisplay() {
                       {" "}
                       <h4>Rate :</h4>
                     </div>
-                    <div className="col-lg-8 col-sm-12">
+                    <div className="col-lg-8 col-sm-12 text-md">
                       {" "}
                       <h4>
                         <a href="/login" className="text-danger">
                           Login
                         </a>{" "}
-                        To Rate The Video
+                        to rate the video
                       </h4>
                     </div>
                   </>
@@ -340,12 +338,12 @@ function VideoDetailsDisplay() {
                       <th
                         style={{
                           borderRight: "1px solid black",
-                          fontSize: "25px",
+                          fontSize: "20px",
                         }}
                       >
                         User
                       </th>
-                      <th style={{ fontSize: "25px" }}>Rating</th>
+                      <th style={{ fontSize: "20px" }}>Rating</th>
                     </tr>
                   </thead>
                   <tbody style={{ borderTop: "5px solid black" }}>
