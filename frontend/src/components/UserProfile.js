@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../helper/LoginContext";
 import { URL } from "./Data";
@@ -14,7 +14,6 @@ function UserProfile() {
   const [loggedInUser, setLoggedInUser] = useState("");
   const [videosAddedByUser, setVideosAddedByUser] = useState([]);
   const [videosRatedByUser, setVideosRatedByUser] = useState([]);
-  const [profileOwner, setProfileOwner] = useState(false);
   let { username } = useParams();
   const navigate = useNavigate();
 
@@ -25,29 +24,34 @@ function UserProfile() {
           Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
         },
       };
+
       Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
         .then((res) => {
-          setLoggedInUser(res.data.username);
+          setLoggedInUser((prev) => {
+            return res.data.username;
+          });
         })
         .catch((error) => {
           console.log(error);
           setIsUserLoggedIn(false);
         });
     }
+  }, [isUserLoggedIn]);
 
+  useEffect(() => {
     Axios.get(`${URL}/api/v1/user/${username}`)
       .then((res) => {
         setVideosAddedByUser((prevVids) => {
           return res.data.coursesAdded;
+        });
+        setVideosRatedByUser((prevVids) => {
+          return res.data.coursesRated;
         });
       })
       .catch((err) => {
         console.log(err);
         Swal.fire("No Such User Exists");
       });
-    if (username === loggedInUser) {
-      setProfileOwner(true);
-    }
   }, []);
 
   return (
@@ -73,8 +77,9 @@ function UserProfile() {
               >
                 {username}
               </h1>
-              {profileOwner ? (
-                <>
+
+              {username === loggedInUser ? (
+                <div className="d-flex justify-content-center align-items-center flex-wrap">
                   <button
                     className="btn btn-outline-danger mt-1"
                     onClick={() => {
@@ -86,12 +91,22 @@ function UserProfile() {
                   <button
                     className="btn btn-outline-danger mt-1"
                     onClick={() => {
-                      navigate("/logout");
+                      setIsUserLoggedIn(false);
+                      localStorage.removeItem("tokenYoutubeIMDB");
+                      navigate("/");
                     }}
                   >
                     Logout
                   </button>
-                </>
+                  <button
+                    className="btn btn-outline-danger mt-1"
+                    onClick={() => {
+                      navigate("/dashboard");
+                    }}
+                  >
+                    Dashboard
+                  </button>
+                </div>
               ) : null}
             </div>
 
@@ -106,24 +121,18 @@ function UserProfile() {
                       textDecorationColor: "#800",
                     }}
                   >
-                    Last Three Video Details Added
+                    Videos Added
                   </h3>
                 </div>
-                {videosAddedByUser
-                  .slice(
-                    videosAddedByUser.length - 4,
-                    videosAddedByUser.length - 1
-                  )
-                  .map((value) => {
-                    return (
-                      <div className="col-md-6 col-lg-4 col-sm-12">
-                        (
-                        <VideoDetailsDisplayCardForUserProfile
-                          videoID={value.videoID}
-                        />
-                      </div>
-                    );
-                  })}
+                {videosAddedByUser.slice(0, 3).map((value) => {
+                  return (
+                    <div className="col-md-6 col-lg-4 col-sm-12">
+                      <VideoDetailsDisplayCardForUserProfile
+                        videoID={value.videoID}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
