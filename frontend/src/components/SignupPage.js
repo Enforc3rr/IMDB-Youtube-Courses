@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Axios from "axios";
 import { LoginContext } from "../helper/LoginContext";
+import { URL } from "./Data";
 
 function SignupPage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -37,11 +38,7 @@ function SignupPage() {
         "content-type": "application/json",
       },
     };
-    Axios.post(
-      "http://localhost:8000/api/v1/user/usersignup",
-      dataToBeSent,
-      config
-    )
+    Axios.post(`${URL}/api/v1/user/usersignup`, dataToBeSent, config)
 
       .then((res) => {
         console.log(res);
@@ -64,7 +61,8 @@ function SignupPage() {
   };
 
   const checkPasswordFunc = (e) => {
-    setPassword(e.target.value);
+    let temp = e.target.value.replace(/ /g, "");
+    setPassword(temp);
 
     if (e.target.value.length > 6) {
       setPasswordDetailsText("Your Password Looks Good enough");
@@ -73,6 +71,14 @@ function SignupPage() {
       setPasswordDetailsText("uh Oh , Your Password Doesn't look Good");
       setPasswordCheck(false);
     }
+  };
+  const checkNameFunc = (e) => {
+    let temp = e.target.value.replace(/ /g, "");
+    setName(temp);
+  };
+  const checkUsernameFunc = (e) => {
+    let temp = e.target.value.replace(/ /g, "");
+    setUsername(temp);
   };
 
   const disabledButton = () => {
@@ -134,13 +140,13 @@ function SignupPage() {
           className="inputSignup"
           placeholder="Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => checkNameFunc(e)}
         />
         <input
           className="inputSignup"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => checkUsernameFunc(e)}
         />
         <input
           className="inputSignup"
