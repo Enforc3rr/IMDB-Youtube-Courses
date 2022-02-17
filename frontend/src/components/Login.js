@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import LoadingAnimation from "./LoadingAnimation";
 import { LoginContext } from "../helper/LoginContext";
 import { useNavigate } from "react-router-dom";
+import { URL } from "./Data";
 
 // Yet to learn how to manage Cookie in MERN stack
 
@@ -31,11 +32,7 @@ function Login() {
         "content-type": "application/json",
       },
     };
-    Axios.post(
-      "http://localhost:8000/api/v1/user/userlogin",
-      dataToBeSent,
-      config
-    )
+    Axios.post(`${URL}/api/v1/user/userlogin`, dataToBeSent, config)
       .then((res) => {
         setIsUserLoggedIn(true);
         localStorage.setItem("tokenYoutubeIMDB", res.headers.authorization);
@@ -50,6 +47,17 @@ function Login() {
         });
       });
   };
+
+  const checkPasswordFunc = (e) => {
+    let temp = e.target.value.replace(/ /g, "");
+    setPassword(temp);
+  };
+
+  const checkUsernameFunc = (e) => {
+    let temp = e.target.value.replace(/ /g, "");
+    setUsername(temp);
+  };
+
   const login = () => {
     return (
       <>
@@ -98,14 +106,14 @@ function Login() {
                       className="inputLogin"
                       placeholder="Username"
                       value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      onChange={(e) => checkUsernameFunc(e)}
                     />
                     <input
                       className="inputLogin"
                       placeholder="Password"
                       type="password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => checkPasswordFunc(e)}
                     />
                     <button
                       className="btn btn-outline-danger"
@@ -117,6 +125,9 @@ function Login() {
                     >
                       Login
                     </button>
+                    <a href="/signup">
+                      <u>Click Here To Make An Account</u>
+                    </a>
                   </div>
                 </div>
               </div>
