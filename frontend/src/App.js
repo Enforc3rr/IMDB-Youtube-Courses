@@ -11,6 +11,7 @@ import { LoginContext } from "./helper/LoginContext";
 import PrivateRoute from "./helper/PrivateRoute";
 import UserProfile from "./components/UserProfile";
 import VideoAvailabilityCheck from "./components/VideoAvailabilityCheck";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -51,19 +52,27 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/logout"
             element={
               <PrivateRoute to="/login">
                 <Logout />
               </PrivateRoute>
             }
-          />
+          /> */}
           <Route
             path="/videoadd"
             element={
               <PrivateRoute to="/login">
                 <VideoAvailabilityCheck />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute to="/login">
+                <Dashboard />
               </PrivateRoute>
             }
           />
