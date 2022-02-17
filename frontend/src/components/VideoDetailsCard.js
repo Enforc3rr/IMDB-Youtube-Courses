@@ -20,7 +20,7 @@ function VideoDetailsCard(props) {
       setTotalRating(props.data.videoRating);
       setVideoLink(`https://www.youtube.com/watch?v=${props.data.videoID}`);
       setTopic(props.data.videoTopic);
-      setVideoDetailsPage(`http://localhost:3000/vd/${props.data.videoID}`);
+      setVideoDetailsPage(`/vd/${props.data.videoID}`);
       setIsPageLoading(false);
     }, 1000);
   }, []);
@@ -52,7 +52,7 @@ function VideoDetailsCard(props) {
         <div
           className="card shadow m-3 videoDetailsCard"
           style={{
-            minHeight: "75vh",
+            minHeight: "50vh",
             borderRadius: "15px",
             color: "black",
             border: "1px solid black",
