@@ -41,6 +41,7 @@ function VideoDetailsForm(props) {
   useEffect(() => {
     if (categories[category] === "Programming")
       setVideoTopicPropertyName("Technology/Programming Language");
+    else setVideoTopicPropertyName("Topic");
   }, [category]);
 
   const submitData = () => {
