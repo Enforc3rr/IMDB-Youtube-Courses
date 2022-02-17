@@ -1,5 +1,6 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
+import { URL } from "./Data";
 
 //Passing user details in Navbar as a prop
 
@@ -16,7 +17,7 @@ function Navbar(props) {
           Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
         },
       };
-      Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+      Axios.get(`${URL}/api/v1/user/userdetails`, config)
         .then((res) => {
           setUsernameOfLoggedInUser(res.data.username);
         })
@@ -26,6 +27,36 @@ function Navbar(props) {
         });
     }
   });
+
+  const mobileIconLogin = () => {
+    return (
+      <>
+        <a href="/login">
+          <img
+            src="https://img.icons8.com/external-xnimrodx-lineal-color-xnimrodx/64/000000/external-user-shopping-mall-xnimrodx-lineal-color-xnimrodx.png"
+            className="rounded-circle"
+            height={"22"}
+            loading="lazy"
+          />
+        </a>
+      </>
+    );
+  };
+
+  const mobileIconAfterLogin = () => {
+    return (
+      <>
+        <a href={`/u/${usernameOfLoggedInUser}`}>
+          <img
+            src="https://img.icons8.com/external-xnimrodx-lineal-color-xnimrodx/64/000000/external-user-shopping-mall-xnimrodx-lineal-color-xnimrodx.png"
+            className="rounded-circle"
+            height={"22"}
+            loading="lazy"
+          />
+        </a>
+      </>
+    );
+  };
 
   return (
     <>
@@ -44,7 +75,7 @@ function Navbar(props) {
               YoutubeCourseIMDB
             </span>
           </a>
-          <a href="/" style={{ marginRight: "50px", marginLeft: "20px" }}>
+          <a href="/search" style={{ marginRight: "50px", marginLeft: "20px" }}>
             <img
               src="https://cdn-icons-png.flaticon.com/512/1055/1055645.png"
               className="rounded-circle"
@@ -52,14 +83,10 @@ function Navbar(props) {
               loading="lazy"
             />
           </a>
-          <a>
-            <img
-              src="https://cdn-icons.flaticon.com/png/512/668/premium/668709.png?token=exp=1644695769~hmac=b69706e14dc9c45f9f949a1d7c883813"
-              className="rounded-circle"
-              height={"22"}
-              loading="lazy"
-            />
-          </a>
+          {}
+          {!props.login.isUserLoggedIn
+            ? mobileIconLogin()
+            : mobileIconAfterLogin()}
         </button>
         <div className="collapse navbar-collapse" id="navbarToggler">
           <a href="/">
@@ -132,7 +159,7 @@ function Navbar(props) {
                   {props.login.isUserLoggedIn}
                 </span>
                 <img
-                  src="https://cdn-icons.flaticon.com/png/512/668/premium/668709.png?token=exp=1644695769~hmac=b69706e14dc9c45f9f949a1d7c883813"
+                  src="https://img.icons8.com/external-xnimrodx-lineal-color-xnimrodx/64/000000/external-user-shopping-mall-xnimrodx-lineal-color-xnimrodx.png"
                   className="rounded-circle"
                   height={"30"}
                   loading="lazy"
