@@ -62,13 +62,29 @@ exports.changeRatings= async (req,res)=>{
     });
     videoRatingToBeChanged.videoRating = rating/videoRatingToBeChanged.ratingsReceived.length;
     const newData = await videoDatabase.updateOne({videoID : req.body.videoID},{$set : videoRatingToBeChanged},{new : true});
+    const user = await userDatabase.findById(req.user);
+
+    const data = {
+        videoID : req.body.videoID ,
+        ratingGiven : req.body.ratingValue ,
+        ratingAddedOn : Date.now()
+    }
+    user.coursesRated.push(data);
+    await userDatabase.findByIdAndUpdate(req.user , user , {new : true});
     return res.status(200).json(newData);
 }
 
 exports.deleteVideoInfo = async (req,res)=>{
-    //For Now I am not gonna check if user who added video on webapp is same as the one who is gonna delete it .
-    await videoDatabase.deleteOne({videoID : req.params.videoID});
-    return res.send(req.params.videoID);
+    const user = await userDatabase.findById(req.user);
+    user.coursesAdded = user.coursesAdded.filter(value => value.videoID !== req.params.videoID);
+    //This isn't the proper logic to delete the video , as we would have to remove video ID from the coursesRated array of users who have rated the video
+    try{
+        await videoDatabase.deleteOne({videoID : req.params.videoID});
+        await userDatabase.findByIdAndUpdate(req.user,user);
+        return res.send(req.params.videoID);
+    }catch (e) {
+        return res.status(400).send("An error occured while deleting the video");
+    }
 }
 
 exports.fetchVideoInfo = async (req,res)=>{
