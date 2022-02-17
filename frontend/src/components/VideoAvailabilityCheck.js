@@ -20,7 +20,7 @@ function VideoAvailabilityCheck() {
           Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
         },
       };
-      Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+      Axios.get(`${URL}/api/v1/user/userdetails`, config)
         .then((res) => {
           setLoggedInUser(res.data.username);
         })
