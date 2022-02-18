@@ -25,7 +25,7 @@ function UserProfile() {
         },
       };
 
-      Axios.get("http://localhost:8000/api/v1/user/userdetails", config)
+      Axios.get(`${URL}/api/v1/user/userdetails`, config)
         .then((res) => {
           setLoggedInUser((prev) => {
             return res.data.username;
