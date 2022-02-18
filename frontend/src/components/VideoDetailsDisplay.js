@@ -46,6 +46,23 @@ function VideoDetailsDisplay() {
   const ratingsReceivedGotMounted = useRef(false);
 
   // USE EFFECT HOOK
+  useEffect(() => {
+    if (localStorage.getItem("tokenYoutubeIMDB") && isUserLoggedIn) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
+        },
+      };
+      Axios.get(`${URL}/api/v1/user/userdetails`, config)
+        .then((res) => {
+          setLoggedInUser(res.data.username);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsUserLoggedIn(false);
+        });
+    }
+  }, [isUserLoggedIn]);
 
   useEffect(() => {
     Axios.get(`${URL}/api/v1/video/getvideo/${videoID}`)
@@ -68,24 +85,6 @@ function VideoDetailsDisplay() {
         console.log(error);
       });
   }, []);
-
-  useEffect(() => {
-    if (localStorage.getItem("tokenYoutubeIMDB") && isUserLoggedIn) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
-        },
-      };
-      Axios.get(`${URL}/api/v1/user/userdetails`, config)
-        .then((res) => {
-          setLoggedInUser(res.data.username);
-        })
-        .catch((error) => {
-          console.log(error);
-          setIsUserLoggedIn(false);
-        });
-    }
-  }, [isUserLoggedIn]);
 
   useEffect(() => {
     if (ratingsReceivedGotMounted.current) {
@@ -114,15 +113,6 @@ function VideoDetailsDisplay() {
               return [...oldValue, ratingsReceived[i]];
             });
           }
-        }
-
-        const userTempRating = ratingsReceived.filter((value) => {
-          return value.ratingsReceivedBy === loggedInUser;
-        });
-
-        if (userTempRating.length !== 0) {
-          setHasUserRatedThisBefore(true);
-          setUserRating(userTempRating[0].ratingValue);
         }
       }
     } else {
@@ -181,6 +171,18 @@ function VideoDetailsDisplay() {
       userRatingGotMounted.current = true;
     }
   }, [userRating]);
+
+  useEffect(() => {
+    console.log(loggedInUser);
+    let userTempRating = ratingsReceived.filter((value) => {
+      return value.ratingsReceivedBy === loggedInUser;
+    });
+
+    if (userTempRating.length !== 0) {
+      setHasUserRatedThisBefore(true);
+      setUserRating(userTempRating[0].ratingValue);
+    }
+  }, [loggedInUser]);
 
   // Functions
 
