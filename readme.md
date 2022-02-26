@@ -11,13 +11,14 @@
 ### - Backend  : Nodejs/ExpressJs 
 ### - Database : MongoDB 
 
- **Please Note** : I am not a very creative person when it comes to styling , designing and other stuff. So If you find this web app lack-lustrous that's actually the main reason.
+ **Please Note** : I am not a very creative person when it comes to styling , designing and other stuff similar to that. So If you find this web app lack-lustrous that's actually the main reason.
 
  **To Test Out This Web App without making an account use the following details** 
  ```
  username : DemoUser (case sensitive)
  password : password
  ```
+**To see Search page in action** : Search for something like reactjs , vscode . 
 
 ## End Points 
 - Video (/api/v1/video) 
