@@ -135,3 +135,7 @@
 ## Future Work 
 - To make API error response more particular than what it is right now .
 - To improve certain UI elements.
+- Adding Pagination
+
+
+##### Please feel free to ask any question regarding this application and also suggestions and improvements are most welcome.
