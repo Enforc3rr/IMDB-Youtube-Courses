@@ -4,6 +4,7 @@ import VideoDetailsForm from "./VideoDetailsForm";
 import "../App.css";
 import { URL } from "./Data";
 import { LoginContext } from "../helper/LoginContext";
+import Swal from "sweetalert2";
 
 function VideoAvailabilityCheck() {
   const [videoPresent, setVideoPresent] = useState(null);
@@ -30,6 +31,13 @@ function VideoAvailabilityCheck() {
     }
   }, []);
 
+  function youtube_parser(url) {
+    const regExp =
+      /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[7].length == 11 ? match[7] : false;
+  }
+
   const checkVideoAvailabilty = async () => {
     setInitialCheck(true);
     const config = {
@@ -37,8 +45,11 @@ function VideoAvailabilityCheck() {
         Authorization: `Bearer ${localStorage.getItem("tokenYoutubeIMDB")}`,
       },
     };
+    let videoID = youtube_parser(videoUrl);
     //To add video url verification check .
-    const videoID = videoUrl.split("watch?v=")[1].split("&")[0];
+    if (!videoID) {
+      Swal.fire("Wrong URL");
+    }
     const response = await Axios.get(
       `${URL}/api/v1/video/videocheck?vid=${videoID}`,
       config
