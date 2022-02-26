@@ -8,6 +8,13 @@ import LoadingAnimation from "./LoadingAnimation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
+function youtube_parser(url) {
+  const regExp =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[7].length == 11 ? match[7] : false;
+}
+
 function VideoDetailsForm(props) {
   const [category, setCategory] = useState();
   const [topic, setTopic] = useState("");
@@ -18,7 +25,7 @@ function VideoDetailsForm(props) {
   const [uploadedBy, setUploadedBy] = useState("");
   const [videoTopicPropertyName, setVideoTopicPropertyName] =
     useState("Video Topic");
-  const videoID = props.videoUrl.split("watch?v=")[1].split("&")[0];
+  const videoID = youtube_parser(props.videoUrl);
   const [loadingDetailsForm, setLoadingDetailsForm] = useState(true);
   const [displayResponse, setDisplayResponse] = useState(false);
   const { isUserLoggedIn, setIsUserLoggedIn } = useContext(LoginContext);
