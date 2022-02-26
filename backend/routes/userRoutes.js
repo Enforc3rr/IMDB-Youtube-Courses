@@ -11,9 +11,5 @@ router.route("/userdetails")
 router.route("/:username")
     .get(userData);
 
-router.route("/test")
-    .get(verifyJWT , (req,res)=>{
-        return res.send("Protected Route Test");
-    });
 
 module.exports = router;
