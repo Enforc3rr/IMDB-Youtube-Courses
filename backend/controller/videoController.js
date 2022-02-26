@@ -4,12 +4,13 @@ const moment = require("moment");
 const axios = require("axios");
 const videoAdditionDate = `${moment().format("DD/MM/YYYY").split("/")[0]}-${moment().format("DD/MM/YYYY").split("/")[1]}-${moment().format("DD/MM/YYYY").split("/")[2]}`;
 
+function youtube_parser(url){
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+}
 exports.addVideo = async (req,res)=>{
-    let videoID ;
-
-    if(req.body.videoURL.split("watch?v=")[1]){ // put this code on front end as well so that we don't get any other link.
-       videoID = req.body.videoURL.split("watch?v=")[1].split("&")[0];
-    }
+    const videoID = youtube_parser(req.body.videoURL) ;
     const youtubeAPIResponse = await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoID}&key=${process.env.YOUTUBE_KEY}`);
 
     const video = {
